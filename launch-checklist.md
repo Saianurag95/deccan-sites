@@ -34,21 +34,21 @@ RAZORPAY_KEY_SECRET=your-live-razorpay-key-secret
 7. Replace test keys with live keys in the hosting environment.
 
 ## Hosting Setup
-Use a Node-capable host because the backend must run server code.
+Use Vercel for the public website and API routes.
 
-Recommended for this current project:
-- Render Web Service
-- Railway
-- DigitalOcean App Platform
+Recommended current setup:
+- GitHub repo connected to Vercel
+- Static files served by Vercel
+- API routes served from the `/api` folder
 
 Build command:
 ```text
-npm install
+None
 ```
 
-Start command:
+Output directory:
 ```text
-npm start
+.
 ```
 
 ## After Deployment
@@ -60,7 +60,7 @@ npm start
 7. For serious production, move users/payments into a real database.
 
 ## Production Database Note
-The current backend stores payment records in a local JSON file. That is fine for local testing, but live hosting should use a real database because many hosts do not permanently keep local filesystem data.
+The current Vercel API creates project estimates and Razorpay orders, but it does not permanently store leads in a database yet. For serious production, connect a real database so every portal submission and payment status is saved.
 
 Suggested next database:
 - Supabase PostgreSQL
