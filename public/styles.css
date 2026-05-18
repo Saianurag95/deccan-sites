@@ -1,0 +1,160 @@
+:root {
+  color-scheme: dark;
+  --bg: #0a0b0b;
+  --panel: rgba(22, 21, 18, 0.78);
+  --line: rgba(255, 255, 255, 0.12);
+  --text: #fff7e7;
+  --muted: #cfc6b8;
+  --gold: #d7b56d;
+  --gold-soft: #f3d891;
+  --sage: #6f8f82;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 16% 8%, rgba(215, 181, 109, 0.16), transparent 30%),
+    radial-gradient(circle at 86% 0%, rgba(111, 143, 130, 0.17), transparent 28%),
+    linear-gradient(180deg, #0a0b0b 0%, #11100d 52%, #090909 100%);
+  color: var(--text);
+  font-family: Manrope, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.font-display {
+  font-family: "Instrument Serif", Georgia, serif;
+}
+
+.hero-bg {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    radial-gradient(circle at 60% 20%, rgba(215, 181, 109, 0.16), transparent 22%);
+  background-size: 54px 54px, 54px 54px, auto;
+}
+
+.lux-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(180deg, #000, transparent 82%);
+}
+
+.glass {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.045));
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(22px);
+}
+
+.panel {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(18px);
+}
+
+.shine-btn {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 18px 46px rgba(215, 181, 109, 0.23);
+}
+
+.shine-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-120%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.42), transparent);
+  transition: transform 650ms ease;
+}
+
+.shine-btn:hover::after {
+  transform: translateX(120%);
+}
+
+.chip {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.065);
+  padding: 0.55rem 0.8rem;
+  color: #e7ddce;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.showcase-card,
+.demo-card {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    radial-gradient(circle at 85% 12%, color-mix(in srgb, var(--accent) 40%, transparent), transparent 32%),
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.035));
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.28);
+}
+
+.demo-card {
+  background:
+    radial-gradient(circle at 20% 0%, color-mix(in srgb, var(--glow) 34%, transparent), transparent 38%),
+    radial-gradient(circle at 95% 20%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.035));
+}
+
+.demo-browser {
+  position: relative;
+  isolation: isolate;
+}
+
+.demo-aura {
+  position: absolute;
+  inset: 18% -18% auto auto;
+  width: 260px;
+  height: 260px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--glow) 40%, transparent);
+  filter: blur(38px);
+  opacity: 0.8;
+}
+
+.portal-light {
+  background:
+    radial-gradient(circle at 15% 10%, rgba(215, 181, 109, 0.28), transparent 28%),
+    radial-gradient(circle at 90% 18%, rgba(111, 143, 130, 0.18), transparent 26%),
+    linear-gradient(180deg, #fffaf0 0%, #f5f2ea 52%, #ece7dc 100%);
+}
+
+.mobile-scroll {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.mobile-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  body {
+    background: linear-gradient(180deg, #0a0b0b 0%, #11100d 62%, #090909 100%);
+  }
+}
