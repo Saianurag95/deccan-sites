@@ -284,6 +284,23 @@ function formatPrice(value) {
   }).format(value);
 }
 
+async function readApiJson(response) {
+  const text = await response.text();
+  let data;
+
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    throw new Error(`API route returned a non-JSON response. Status: ${response.status}. Check the Vercel API deployment.`);
+  }
+
+  if (!response.ok || data.ok === false) {
+    throw new Error(data.error || `Request failed with status ${response.status}.`);
+  }
+
+  return data;
+}
+
 function Estimate() {
   const [typeIndex, setTypeIndex] = React.useState(1);
   const [pages, setPages] = React.useState(5);
@@ -435,7 +452,7 @@ function ProjectPortal() {
 
   React.useEffect(() => {
     fetch("/api/payments/config")
-      .then((response) => response.json())
+      .then(readApiJson)
       .then((data) => setConfig(data))
       .catch(() => setStatus("Payment gateway will activate after backend setup is live."));
   }, []);
@@ -501,10 +518,7 @@ function ProjectPortal() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      const data = await response.json();
-      if (!data.ok) {
-        throw new Error(data.error || "Could not save project details.");
-      }
+      const data = await readApiJson(response);
       setProject(data.project);
       setStatus(`Project saved. Opening payment for ${formatPrice(data.estimatedAmount)}.`);
       await startPaymentForProject(data.project);
@@ -536,11 +550,7 @@ function ProjectPortal() {
           phone: form.phone,
         }),
       });
-      const order = await orderResponse.json();
-
-      if (!order.ok) {
-        throw new Error(order.error || "Could not start payment.");
-      }
+      const order = await readApiJson(orderResponse);
 
       const checkout = new window.Razorpay({
         key: order.keyId,
@@ -557,11 +567,7 @@ function ProjectPortal() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(paymentResult),
           });
-          const verified = await verifyResponse.json();
-          if (!verified.ok) {
-            setStatus(verified.error || "Payment received but verification failed. Contact Deccan Sites.");
-            return;
-          }
+          await readApiJson(verifyResponse);
           setStatus("Payment verified. Your project booking is recorded.");
         },
         modal: {
