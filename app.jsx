@@ -113,28 +113,27 @@ const demoSites = [
 
 function Header() {
   return (
-    <header className="fixed inset-x-3 top-3 z-50 mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#11100d]/78 px-3 py-3 shadow-[0_24px_70px_rgba(0,0,0,.26)] backdrop-blur-2xl md:inset-x-5 md:top-5 md:flex-nowrap">
+    <header className="fixed inset-x-3 top-3 z-50 mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-900/10 bg-white/82 px-3 py-3 shadow-[0_24px_70px_rgba(48,42,32,.12)] backdrop-blur-2xl md:inset-x-5 md:top-5 md:flex-nowrap">
       <a className="flex items-center gap-3" href="#top" aria-label={`${brand.name} home`}>
-        <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#d7b56d] text-sm font-black text-[#17120b] shadow-[0_0_34px_rgba(215,181,109,.34)]">
+        <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#c99a3d] text-sm font-black text-white shadow-[0_0_34px_rgba(201,154,61,.28)]">
           {brand.short}
         </span>
-        <span className="text-lg font-extrabold tracking-[-.02em] text-[#fff8e7]">{brand.name}</span>
+        <span className="text-lg font-extrabold tracking-[-.02em] text-[#18202d]">{brand.name}</span>
       </a>
-      <nav className="mobile-scroll order-3 flex w-full gap-1 text-sm font-bold text-stone-300 md:order-none md:w-auto">
+      <nav className="mobile-scroll order-3 flex w-full gap-1 text-sm font-bold text-slate-600 md:order-none md:w-auto">
         {[
           ["Services", "#services"],
           ["Pricing", "#pricing"],
-          ["Estimate", "#estimate"],
           ["Portal", "#portal"],
           ["Work", "#work"],
           ["Contact", "#contact"],
         ].map(([label, href]) => (
-          <a key={href} className="rounded-xl px-3 py-2 hover:bg-white/10" href={href}>
+          <a key={href} className="rounded-xl px-3 py-2 hover:bg-slate-900/6" href={href}>
             {label}
           </a>
         ))}
       </nav>
-      <a className="shine-btn rounded-xl bg-[#d7b56d] px-4 py-3 text-sm font-extrabold text-[#17120b]" href="#portal">
+      <a className="shine-btn rounded-xl bg-[#18202d] px-4 py-3 text-sm font-extrabold text-white" href="#portal">
         Get a quote
       </a>
     </header>
@@ -145,30 +144,30 @@ function Hero() {
   return (
     <section id="top" className="relative isolate overflow-hidden px-4 pb-20 pt-56 sm:px-6 sm:pt-44 lg:min-h-[94svh] lg:px-8 lg:pt-40">
       <div className="absolute inset-0 -z-30 hero-bg" />
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_18%_16%,rgba(215,181,109,.24),transparent_30%),radial-gradient(circle_at_84%_14%,rgba(83,150,139,.20),transparent_28%),linear-gradient(180deg,rgba(10,12,12,.82),#0a0b0b_86%)]" />
+      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_18%_16%,rgba(201,154,61,.22),transparent_30%),radial-gradient(circle_at_84%_14%,rgba(90,143,130,.18),transparent_28%),linear-gradient(180deg,rgba(255,250,240,.88),#f4efe5_86%)]" />
       <div className="lux-grid" />
 
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[minmax(0,1fr)_440px] lg:items-center">
         <div className="max-w-4xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#d7b56d]/30 bg-[#d7b56d]/10 px-3 py-2 text-[.72rem] font-extrabold uppercase tracking-[.16em] text-[#f3d891]">
-            <span className="h-2 w-2 rounded-full bg-[#d7b56d] shadow-[0_0_0_6px_rgba(215,181,109,.16)]" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#c99a3d]/30 bg-white/70 px-3 py-2 text-[.72rem] font-extrabold uppercase tracking-[.16em] text-[#8a641d]">
+            <span className="h-2 w-2 rounded-full bg-[#c99a3d] shadow-[0_0_0_6px_rgba(201,154,61,.16)]" />
             {brand.city} · fast delivery for first 5 orders
           </div>
-          <h1 className="mt-7 max-w-4xl font-display text-[clamp(3.45rem,7.5vw,7rem)] leading-[.86] tracking-[-.045em] text-[#fff7e7]">
+          <h1 className="mt-7 max-w-4xl font-display text-[clamp(3.45rem,7.5vw,7rem)] leading-[.86] tracking-[-.045em] text-[#18202d]">
             Websites that make businesses look expensive.
           </h1>
-          <p className="mt-6 max-w-3xl text-[clamp(1.05rem,1.55vw,1.36rem)] font-medium leading-8 text-stone-200">
+          <p className="mt-6 max-w-3xl text-[clamp(1.05rem,1.55vw,1.36rem)] font-medium leading-8 text-slate-700">
             Deccan Sites designs clean, responsive websites and web experiences for businesses that want a polished online presence without agency-level pricing.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a className="shine-btn rounded-2xl bg-[#d7b56d] px-5 py-4 text-sm font-black text-[#17120b]" href="#portal">
+            <a className="shine-btn rounded-2xl bg-[#18202d] px-5 py-4 text-sm font-black text-white" href="#portal">
               Start project portal
             </a>
-            <a className="rounded-2xl border border-white/14 bg-white/[.06] px-5 py-4 text-sm font-black text-white backdrop-blur hover:bg-white/[.1]" href="#pricing">
+            <a className="rounded-2xl border border-slate-900/12 bg-white/72 px-5 py-4 text-sm font-black text-[#18202d] backdrop-blur hover:bg-white" href="#pricing">
               View pricing
             </a>
           </div>
-          <p className="mt-5 max-w-xl rounded-2xl border border-[#d7b56d]/25 bg-[#d7b56d]/10 px-4 py-3 text-sm font-extrabold text-[#f3d891]">
+          <p className="mt-5 max-w-xl rounded-2xl border border-[#c99a3d]/25 bg-white/72 px-4 py-3 text-sm font-extrabold text-[#8a641d]">
             Launch offer: first 5 confirmed projects get priority fast delivery.
           </p>
           <div className="mt-7 flex max-w-3xl flex-wrap gap-2">
@@ -182,17 +181,17 @@ function Hero() {
 
         <aside className="glass rounded-3xl p-4">
           <div className="mb-4 flex items-center justify-between gap-3">
-            <span className="text-sm font-extrabold text-[#f3d891]">Featured package</span>
-            <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-extrabold text-white">Pilot pricing</span>
+            <span className="text-sm font-extrabold text-[#8a641d]">Featured package</span>
+            <span className="rounded-full bg-slate-900/8 px-3 py-1 text-xs font-extrabold text-[#18202d]">Pilot pricing</span>
           </div>
-          <div className="rounded-3xl bg-[linear-gradient(135deg,#1f302e,#6f5630)] p-6">
-            <p className="text-xs font-extrabold uppercase tracking-[.14em] text-[#ffe9ad]">Business site</p>
+          <div className="rounded-3xl bg-[linear-gradient(135deg,#ffffff,#f3dfae)] p-6 text-[#18202d]">
+            <p className="text-xs font-extrabold uppercase tracking-[.14em] text-[#8a641d]">Business site</p>
             <h2 className="mt-5 text-4xl font-black leading-none tracking-[-.04em]">₹2,999</h2>
-            <p className="mt-4 leading-7 text-stone-100">A professional website for service businesses, shops, cafes, clinics, creators, and local brands.</p>
+            <p className="mt-4 leading-7 text-slate-700">A professional website for service businesses, shops, cafes, clinics, creators, and local brands.</p>
             <div className="mt-6 grid grid-cols-3 gap-2 text-center text-xs font-extrabold">
-              <span className="rounded-xl bg-white/12 px-2 py-2">5 pages</span>
-              <span className="rounded-xl bg-white/12 px-2 py-2">Mobile-first</span>
-              <span className="rounded-xl bg-white/12 px-2 py-2">SEO-ready</span>
+              <span className="rounded-xl bg-white/72 px-2 py-2">5 pages</span>
+              <span className="rounded-xl bg-white/72 px-2 py-2">Mobile-first</span>
+              <span className="rounded-xl bg-white/72 px-2 py-2">SEO-ready</span>
             </div>
           </div>
           <div className="mt-3 grid grid-cols-2 gap-3">
@@ -207,9 +206,9 @@ function Hero() {
 
 function MiniMetric({ label, value }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[.055] p-4">
-      <span className="text-xs font-extrabold uppercase text-stone-400">{label}</span>
-      <strong className="mt-2 block text-xl leading-5 text-[#fff7e7]">{value}</strong>
+    <div className="rounded-2xl border border-slate-900/10 bg-white/72 p-4">
+      <span className="text-xs font-extrabold uppercase text-slate-500">{label}</span>
+      <strong className="mt-2 block text-xl leading-5 text-[#18202d]">{value}</strong>
     </div>
   );
 }
@@ -217,8 +216,8 @@ function MiniMetric({ label, value }) {
 function SectionHead({ eyebrow, title, children }) {
   return (
     <div className="mb-10 max-w-4xl">
-      <p className="text-xs font-black uppercase tracking-[.16em] text-[#f3d891]">{eyebrow}</p>
-      <h2 className="mt-3 text-[clamp(2.35rem,5vw,4.45rem)] font-black leading-[.98] tracking-[-.045em] text-[#fff7e7]">{title}</h2>
+      <p className="text-xs font-black uppercase tracking-[.16em] text-[#8a641d]">{eyebrow}</p>
+      <h2 className="mt-3 text-[clamp(2.35rem,5vw,4.45rem)] font-black leading-[.98] tracking-[-.045em] text-[#18202d]">{title}</h2>
       {children}
     </div>
   );
@@ -233,8 +232,8 @@ function Services() {
           {services.map(([title, desc]) => (
             <article key={title} className="panel rounded-3xl p-6">
               <span className="inline-block h-2 w-12 rounded-full bg-[#d7b56d]" />
-              <h3 className="mt-7 text-2xl font-black tracking-[-.03em] text-[#fff7e7]">{title}</h3>
-              <p className="mt-3 leading-7 text-stone-300">{desc}</p>
+              <h3 className="mt-7 text-2xl font-black tracking-[-.03em] text-[#18202d]">{title}</h3>
+              <p className="mt-3 leading-7 text-slate-600">{desc}</p>
             </article>
           ))}
         </div>
@@ -245,25 +244,25 @@ function Services() {
 
 function Pricing() {
   return (
-    <section id="pricing" className="bg-[#11100d] px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+    <section id="pricing" className="bg-white/55 px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
       <div className="mx-auto max-w-7xl">
         <SectionHead eyebrow="Simple pricing" title="Launch pricing that is intentionally affordable." />
-        <p className="-mt-5 mb-8 max-w-3xl text-lg leading-8 text-stone-300">
+        <p className="-mt-5 mb-8 max-w-3xl text-lg leading-8 text-slate-600">
           First 5 confirmed orders receive priority fast delivery. Exact delivery time depends on pages, content readiness, and selected features.
         </p>
         <div className="grid gap-4 lg:grid-cols-3">
           {packages.map((pack, index) => (
-            <article key={pack.name} className={`panel rounded-3xl p-6 ${index === 1 ? "border-[#d7b56d]/50 bg-[#1b1812]" : ""}`}>
+            <article key={pack.name} className={`panel rounded-3xl p-6 ${index === 1 ? "border-[#c99a3d]/50 bg-[#fff8e8]" : ""}`}>
               <div className="flex items-center justify-between gap-3">
                 <span className="chip">{pack.tag}</span>
-                <span className="rounded-full bg-white/[.06] px-3 py-1 text-sm font-black text-stone-300 line-through">{pack.old}</span>
+                <span className="rounded-full bg-slate-900/[.06] px-3 py-1 text-sm font-black text-slate-500 line-through">{pack.old}</span>
               </div>
-              <strong className="mt-7 block text-5xl font-black tracking-[-.05em] text-[#f3d891]">{pack.price}</strong>
-              <h3 className="mt-4 text-2xl font-black tracking-[-.03em] text-[#fff7e7]">{pack.name}</h3>
-              <p className="mt-3 min-h-20 leading-7 text-stone-300">{pack.desc}</p>
-              <ul className="mt-6 grid gap-3 text-sm font-bold text-stone-200">
+              <strong className="mt-7 block text-5xl font-black tracking-[-.05em] text-[#8a641d]">{pack.price}</strong>
+              <h3 className="mt-4 text-2xl font-black tracking-[-.03em] text-[#18202d]">{pack.name}</h3>
+              <p className="mt-3 min-h-20 leading-7 text-slate-600">{pack.desc}</p>
+              <ul className="mt-6 grid gap-3 text-sm font-bold text-slate-700">
                 {pack.items.map((item) => (
-                  <li key={item} className="rounded-2xl bg-white/[.055] p-3">
+                  <li key={item} className="rounded-2xl bg-slate-900/[.04] p-3">
                     {item}
                   </li>
                 ))}
@@ -299,129 +298,6 @@ async function readApiJson(response) {
   }
 
   return data;
-}
-
-function Estimate() {
-  const [typeIndex, setTypeIndex] = React.useState(1);
-  const [pages, setPages] = React.useState(5);
-  const [domainIndex, setDomainIndex] = React.useState(0);
-  const [selectedAddOns, setSelectedAddOns] = React.useState(["Content writing"]);
-
-  const estimate = React.useMemo(() => {
-    const base = estimateTypes[typeIndex].price;
-    const extraPages = Math.max(0, Number(pages) - 1) * 350;
-    const domain = domainOptions[domainIndex].price;
-    const addOns = estimateAddOns
-      .filter((item) => selectedAddOns.includes(item.label))
-      .reduce((total, item) => total + item.price, 0);
-
-    return base + extraPages + domain + addOns;
-  }, [typeIndex, pages, domainIndex, selectedAddOns]);
-
-  function toggleAddOn(label) {
-    setSelectedAddOns((current) =>
-      current.includes(label) ? current.filter((item) => item !== label) : [...current, label]
-    );
-  }
-
-  return (
-    <section id="estimate" className="px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-      <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[.9fr_1.1fr] lg:items-start">
-        <div>
-          <SectionHead eyebrow="Pricing estimate" title="Get a quick idea before sending the brief.">
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-stone-300">
-              Choose the website type, pages, domain help, and optional features. This gives a starting estimate; the final quote can be confirmed after the requirement form.
-            </p>
-          </SectionHead>
-          <div className="glass rounded-3xl p-6">
-            <span className="text-xs font-black uppercase tracking-[.14em] text-[#f3d891]">Estimated starting price</span>
-            <strong className="mt-4 block text-[clamp(3rem,7vw,5.6rem)] font-black leading-none tracking-[-.06em] text-[#fff7e7]">
-              {formatPrice(estimate)}
-            </strong>
-            <p className="mt-4 leading-7 text-stone-300">
-              Transparent pilot pricing for small businesses, creators, local brands, and service teams that need a polished website without heavy agency cost.
-            </p>
-            <a className="shine-btn mt-6 inline-flex rounded-2xl bg-[#d7b56d] px-5 py-4 text-sm font-black text-[#17120b]" href="#portal">
-              Start project portal
-            </a>
-          </div>
-        </div>
-
-        <div className="panel rounded-3xl p-5 sm:p-6">
-          <div className="grid gap-5">
-            <label className="grid gap-2">
-              <span className="text-sm font-black uppercase tracking-[.12em] text-stone-300">Website type</span>
-              <select
-                className="rounded-2xl border border-white/10 bg-[#0c0d0d] px-4 py-4 font-bold text-[#fff7e7] outline-none focus:border-[#d7b56d]"
-                value={typeIndex}
-                onChange={(event) => setTypeIndex(Number(event.target.value))}
-              >
-                {estimateTypes.map((item, index) => (
-                  <option key={item.label} value={index}>
-                    {item.label} - {formatPrice(item.price)}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <label className="grid gap-2">
-              <span className="text-sm font-black uppercase tracking-[.12em] text-stone-300">Pages needed</span>
-              <input
-                className="rounded-2xl border border-white/10 bg-[#0c0d0d] px-4 py-4 font-bold text-[#fff7e7] outline-none focus:border-[#d7b56d]"
-                min="1"
-                max="20"
-                type="number"
-                value={pages}
-                onChange={(event) => setPages(event.target.value)}
-              />
-            </label>
-
-            <label className="grid gap-2">
-              <span className="text-sm font-black uppercase tracking-[.12em] text-stone-300">Domain and launch help</span>
-              <select
-                className="rounded-2xl border border-white/10 bg-[#0c0d0d] px-4 py-4 font-bold text-[#fff7e7] outline-none focus:border-[#d7b56d]"
-                value={domainIndex}
-                onChange={(event) => setDomainIndex(Number(event.target.value))}
-              >
-                {domainOptions.map((item, index) => (
-                  <option key={item.label} value={index}>
-                    {item.label} {item.price ? `- ${formatPrice(item.price)}` : ""}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <div>
-              <span className="text-sm font-black uppercase tracking-[.12em] text-stone-300">Optional features</span>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                {estimateAddOns.map((item) => (
-                  <label
-                    key={item.label}
-                    className={`flex cursor-pointer items-center justify-between gap-3 rounded-2xl border p-4 transition ${
-                      selectedAddOns.includes(item.label)
-                        ? "border-[#d7b56d]/70 bg-[#d7b56d]/12"
-                        : "border-white/10 bg-white/[.045]"
-                    }`}
-                  >
-                    <span>
-                      <span className="block text-sm font-black text-[#fff7e7]">{item.label}</span>
-                      <span className="mt-1 block text-xs font-bold text-stone-400">{formatPrice(item.price)}</span>
-                    </span>
-                    <input
-                      className="h-5 w-5 accent-[#d7b56d]"
-                      checked={selectedAddOns.includes(item.label)}
-                      onChange={() => toggleAddOn(item.label)}
-                      type="checkbox"
-                    />
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
 }
 
 function ProjectPortal() {
@@ -768,11 +644,11 @@ function Showcase() {
               style={{ "--accent": item.accent, "--glow": item.glow }}
             >
               <span className="inline-flex rounded-full bg-white/10 px-3 py-2 text-xs font-black uppercase tracking-[.12em] text-white">{item.type}</span>
-              <h3 className="mt-24 max-w-xs text-5xl font-black leading-[.88] tracking-[-.055em] text-[#fff7e7]">{item.title}</h3>
-              <p className="mt-5 max-w-sm text-sm font-bold leading-6 text-stone-300">{item.subtitle}</p>
+              <h3 className="mt-24 max-w-xs text-5xl font-black leading-[.88] tracking-[-.055em] text-[#18202d]">{item.title}</h3>
+              <p className="mt-5 max-w-sm text-sm font-bold leading-6 text-slate-600">{item.subtitle}</p>
               <div className="mt-8 grid gap-2">
                 {item.details.map((detail) => (
-                  <span key={detail} className="rounded-2xl bg-white/10 px-3 py-2 text-xs font-black text-stone-100">
+                  <span key={detail} className="rounded-2xl bg-white/70 px-3 py-2 text-xs font-black text-slate-700">
                     {detail}
                   </span>
                 ))}
@@ -799,8 +675,8 @@ function Quality() {
           ["Clear Handover", "Final website, domain guidance, and support details are delivered clearly."],
         ].map(([title, desc]) => (
           <article key={title} className="panel rounded-3xl p-5">
-            <h3 className="text-xl font-black tracking-[-.03em] text-[#fff7e7]">{title}</h3>
-            <p className="mt-3 leading-7 text-stone-300">{desc}</p>
+            <h3 className="text-xl font-black tracking-[-.03em] text-[#18202d]">{title}</h3>
+            <p className="mt-3 leading-7 text-slate-600">{desc}</p>
           </article>
         ))}
       </div>
@@ -810,16 +686,16 @@ function Quality() {
 
 function Contact() {
   return (
-    <section id="contact" className="bg-[#11100d] px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+    <section id="contact" className="bg-white/55 px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
       <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1fr_.9fr] lg:items-center">
         <SectionHead eyebrow="Start a project" title="A polished website should feel like a business asset." />
         <div className="grid gap-3 sm:grid-cols-2">
           <a className="glass rounded-3xl p-5 transition hover:-translate-y-1" href="https://www.instagram.com/anurag__reddy_18/" target="_blank" rel="noopener">
-            <span className="text-xs font-black uppercase tracking-[.14em] text-[#f3d891]">Instagram</span>
+            <span className="text-xs font-black uppercase tracking-[.14em] text-[#8a641d]">Instagram</span>
             <strong className="mt-3 block text-2xl">@anurag__reddy_18</strong>
           </a>
           <a className="glass rounded-3xl p-5 transition hover:-translate-y-1" href="https://wa.me/918019724653" target="_blank" rel="noopener">
-            <span className="text-xs font-black uppercase tracking-[.14em] text-[#f3d891]">WhatsApp</span>
+            <span className="text-xs font-black uppercase tracking-[.14em] text-[#8a641d]">WhatsApp</span>
             <strong className="mt-3 block text-2xl">Anurag</strong>
           </a>
         </div>
@@ -836,7 +712,6 @@ function App() {
         <Hero />
         <Services />
         <Pricing />
-        <Estimate />
         <ProjectPortal />
         <Showcase />
         <Quality />
