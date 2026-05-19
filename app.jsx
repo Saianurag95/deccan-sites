@@ -643,7 +643,7 @@ function Showcase() {
               href={item.href}
               style={{ "--accent": item.accent, "--glow": item.glow }}
             >
-              <span className="inline-flex rounded-full bg-white/10 px-3 py-2 text-xs font-black uppercase tracking-[.12em] text-white">{item.type}</span>
+              <span className="inline-flex rounded-full border border-slate-900/10 bg-white/80 px-3 py-2 text-xs font-black uppercase tracking-[.12em] text-slate-700">{item.type}</span>
               <h3 className="mt-24 max-w-xs text-5xl font-black leading-[.88] tracking-[-.055em] text-[#18202d]">{item.title}</h3>
               <p className="mt-5 max-w-sm text-sm font-bold leading-6 text-slate-600">{item.subtitle}</p>
               <div className="mt-8 grid gap-2">

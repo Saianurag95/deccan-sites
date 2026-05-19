@@ -199,7 +199,9 @@ a {
 
 .restaurant {
   background:
-    linear-gradient(135deg, #fff6df 0%, #f4c870 45%, #5b1812 100%);
+    radial-gradient(circle at 18% 10%, rgba(244, 200, 112, 0.42), transparent 32%),
+    radial-gradient(circle at 88% 18%, rgba(210, 75, 60, 0.16), transparent 30%),
+    linear-gradient(135deg, #fff9ee 0%, #fff0d6 58%, #f7e1c1 100%);
 }
 
 .restaurant .demo-nav-inner {
@@ -212,7 +214,7 @@ a {
 }
 
 .restaurant .visual-panel {
-  background: #42110d;
+  background: #fff0d6;
 }
 
 .plate {
@@ -230,7 +232,9 @@ a {
 
 .education {
   background:
-    linear-gradient(135deg, #f5f8ff 0%, #aac6ff 46%, #172257 100%);
+    radial-gradient(circle at 18% 12%, rgba(53, 93, 255, 0.18), transparent 32%),
+    radial-gradient(circle at 86% 18%, rgba(111, 210, 255, 0.28), transparent 30%),
+    linear-gradient(135deg, #fbfdff 0%, #eef4ff 58%, #dfeaff 100%);
 }
 
 .education .demo-nav-inner {
@@ -243,8 +247,8 @@ a {
 }
 
 .education .visual-panel {
-  background: #101a4a;
-  color: white;
+  background: #edf4ff;
+  color: #111b44;
 }
 
 .rank-card {
@@ -268,7 +272,9 @@ a {
 
 .healthcare {
   background:
-    linear-gradient(135deg, #f4fff9 0%, #b8f0df 48%, #123e35 100%);
+    radial-gradient(circle at 18% 12%, rgba(156, 232, 212, 0.34), transparent 32%),
+    radial-gradient(circle at 88% 18%, rgba(27, 154, 120, 0.18), transparent 30%),
+    linear-gradient(135deg, #fbfffd 0%, #effff8 58%, #dff7ef 100%);
 }
 
 .healthcare .demo-nav-inner {
@@ -281,8 +287,8 @@ a {
 }
 
 .healthcare .visual-panel {
-  background: #113a31;
-  color: white;
+  background: #e6fff6;
+  color: #123e35;
 }
 
 .doctor-card {
