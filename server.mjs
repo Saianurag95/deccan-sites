@@ -34,8 +34,10 @@ const sessionTtlMs = 30 * 24 * 60 * 60 * 1000;
 const otpSecret = process.env.OTP_SECRET || "deccan-sites-local-dev-secret";
 const resendApiKey = process.env.RESEND_API_KEY || "";
 const otpFromEmail = process.env.OTP_FROM_EMAIL || "Deccan Sites <onboarding@resend.dev>";
-const razorpayKeyId = process.env.RAZORPAY_KEY_ID || "";
-const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET || "";
+const cashfreeAppId = process.env.CASHFREE_APP_ID || "";
+const cashfreeSecretKey = process.env.CASHFREE_SECRET_KEY || "";
+const cashfreeEnv = process.env.CASHFREE_ENV === "production" ? "production" : "sandbox";
+const cashfreeApiVersion = process.env.CASHFREE_API_VERSION || "2025-01-01";
 const supabaseUrl = process.env.SUPABASE_URL || "";
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 const isProduction = process.env.NODE_ENV === "production";
@@ -122,10 +124,6 @@ function clampPaymentAmount(amount) {
   const value = Number(amount);
   if (!Number.isFinite(value)) return 0;
   return Math.round(value);
-}
-
-function makeReceiptId() {
-  return `ds_${Date.now()}_${crypto.randomBytes(4).toString("hex")}`;
 }
 
 function normalizeProjectId(projectId) {
@@ -419,8 +417,9 @@ async function handleVerifyOtp(request, response) {
 function handlePaymentConfig(response) {
   json(response, 200, {
     ok: true,
-    enabled: Boolean(razorpayKeyId && razorpayKeySecret),
-    keyId: razorpayKeyId,
+    provider: "cashfree",
+    enabled: Boolean(cashfreeAppId && cashfreeSecretKey),
+    mode: cashfreeEnv,
     currency: "INR",
   });
 }
@@ -501,32 +500,70 @@ async function handleCreateProject(request, response) {
   }
 }
 
-async function createRazorpayOrder({ amount, projectId, name, email, phone }) {
-  const auth = Buffer.from(`${razorpayKeyId}:${razorpayKeySecret}`).toString("base64");
-  const orderResponse = await fetch("https://api.razorpay.com/v1/orders", {
+function getCashfreeBaseUrl() {
+  return cashfreeEnv === "production" ? "https://api.cashfree.com/pg" : "https://sandbox.cashfree.com/pg";
+}
+
+function createCashfreeOrderId(projectId) {
+  const safeProjectId = projectId.toLowerCase().replace(/[^a-z0-9_-]/g, "_");
+  return `${safeProjectId}_${Date.now()}`;
+}
+
+async function createCashfreeOrder({ amount, projectId, name, email, phone, origin }) {
+  const orderId = createCashfreeOrderId(projectId);
+  const orderResponse = await fetch(`${getCashfreeBaseUrl()}/orders`, {
     method: "POST",
     headers: {
-      Authorization: `Basic ${auth}`,
       "Content-Type": "application/json",
+      "x-api-version": cashfreeApiVersion,
+      "x-client-id": cashfreeAppId,
+      "x-client-secret": cashfreeSecretKey,
+      "x-idempotency-key": orderId,
       "User-Agent": "DeccanSites/1.0",
     },
     body: JSON.stringify({
-      amount,
-      currency: "INR",
-      receipt: makeReceiptId(),
-      notes: {
-        customer_name: name || "",
-        customer_email: email || "",
-        customer_phone: phone || "",
-        project_id: projectId || "",
-        source: "deccan-sites-website",
+      order_id: orderId,
+      order_amount: amount,
+      order_currency: "INR",
+      customer_details: {
+        customer_id: projectId,
+        customer_name: name,
+        customer_email: email,
+        customer_phone: phone,
+      },
+      order_meta: {
+        return_url: `${origin || "http://127.0.0.1:8030"}/?cashfree_order_id={order_id}`,
+      },
+      order_note: `Website project payment - ${projectId}`,
+      order_tags: {
+        project_id: projectId,
+        source: "deccan-sites-local",
       },
     }),
   });
 
   const body = await orderResponse.json().catch(() => ({}));
   if (!orderResponse.ok) {
-    throw new Error(body.error?.description || "Could not create payment order.");
+    throw new Error(body.message || body.error?.message || "Could not create Cashfree payment order.");
+  }
+
+  return body;
+}
+
+async function fetchCashfreeOrder(orderId) {
+  const orderResponse = await fetch(`${getCashfreeBaseUrl()}/orders/${encodeURIComponent(orderId)}`, {
+    method: "GET",
+    headers: {
+      "x-api-version": cashfreeApiVersion,
+      "x-client-id": cashfreeAppId,
+      "x-client-secret": cashfreeSecretKey,
+      "User-Agent": "DeccanSites/1.0",
+    },
+  });
+
+  const body = await orderResponse.json().catch(() => ({}));
+  if (!orderResponse.ok) {
+    throw new Error(body.message || body.error?.message || "Could not confirm Cashfree payment status.");
   }
 
   return body;
@@ -546,13 +583,13 @@ async function handleCreatePaymentOrder(request, response) {
       return;
     }
 
-    if (!/^DS-\d{4}-\d{4}$/.test(projectId)) {
-      json(response, 400, { ok: false, error: "Enter the Project ID shared by Deccan Sites." });
+    if (!projectId.startsWith("DS-")) {
+      json(response, 400, { ok: false, error: "Save the project details before payment." });
       return;
     }
 
     if (!name || !isValidEmail(email) || phone.length < 10) {
-      json(response, 400, { ok: false, error: "Enter Project ID, name, valid email, and WhatsApp number." });
+      json(response, 400, { ok: false, error: "Enter name, valid email, and WhatsApp number." });
       return;
     }
 
@@ -563,22 +600,23 @@ async function handleCreatePaymentOrder(request, response) {
       return;
     }
 
-    if (!razorpayKeyId || !razorpayKeySecret) {
+    if (!cashfreeAppId || !cashfreeSecretKey) {
       json(response, 503, {
         ok: false,
-        error: "Payment gateway is not configured yet. Add Razorpay keys to the server environment.",
+        error: "Payment gateway is not configured yet. Add Cashfree keys to the server environment.",
       });
       return;
     }
 
-    const amountPaise = amountRupees * 100;
-    const order = await createRazorpayOrder({ amount: amountPaise, projectId, name, email, phone });
+    const origin = request.headers.origin || `http://${request.headers.host}`;
+    const order = await createCashfreeOrder({ amount: amountRupees, projectId, name, email, phone, origin });
 
     store.payments.push({
       status: "created",
       projectId,
-      orderId: order.id,
-      amount: amountPaise,
+      orderId: order.order_id,
+      cfOrderId: order.cf_order_id,
+      amount: order.order_amount,
       currency: "INR",
       name,
       email,
@@ -587,18 +625,20 @@ async function handleCreatePaymentOrder(request, response) {
     });
     project.status = "payment_started";
     project.paymentAmount = amountRupees;
-    project.paymentOrderId = order.id;
+    project.paymentOrderId = order.order_id;
     await writeStore(store);
 
     json(response, 200, {
       ok: true,
-      orderId: order.id,
-      amount: order.amount,
-      currency: order.currency,
-      keyId: razorpayKeyId,
+      provider: "cashfree",
+      orderId: order.order_id,
+      cfOrderId: order.cf_order_id,
+      paymentSessionId: order.payment_session_id,
+      amount: order.order_amount,
+      currency: order.order_currency,
+      mode: cashfreeEnv,
       name: "Deccan Sites",
-      description: `Website project booking payment - ${projectId}`,
-      prefill: { name, email, contact: phone },
+      description: `Website project payment - ${projectId}`,
     });
   } catch (error) {
     json(response, 500, { ok: false, error: error.message || "Could not create payment order." });
@@ -607,32 +647,34 @@ async function handleCreatePaymentOrder(request, response) {
 
 async function handleVerifyPayment(request, response) {
   try {
-    if (!razorpayKeySecret) {
+    if (!cashfreeAppId || !cashfreeSecretKey) {
       json(response, 503, { ok: false, error: "Payment verification is not configured yet." });
       return;
     }
 
     const body = await readJson(request);
-    const orderId = String(body.razorpay_order_id || "").trim();
-    const paymentId = String(body.razorpay_payment_id || "").trim();
-    const signature = String(body.razorpay_signature || "").trim();
+    const orderId = String(body.orderId || body.order_id || "").trim();
     const projectId = normalizeProjectId(body.projectId);
 
-    if (!orderId || !paymentId || !signature) {
+    if (!orderId) {
       json(response, 400, { ok: false, error: "Missing payment verification details." });
       return;
     }
 
-    const expected = crypto
-      .createHmac("sha256", razorpayKeySecret)
-      .update(`${orderId}|${paymentId}`)
-      .digest("hex");
+    const order = await fetchCashfreeOrder(orderId);
+    const status = String(order.order_status || "").toUpperCase();
 
-    if (expected !== signature) {
-      json(response, 400, { ok: false, error: "Payment signature verification failed." });
+    if (status !== "PAID") {
+      json(response, 200, {
+        ok: false,
+        orderId,
+        status,
+        error: "Payment is not confirmed yet. Please complete payment or try again.",
+      });
       return;
     }
 
+    const paymentId = order.cf_order_id || order.order_id || orderId;
     const store = normalizeStore(await readStore());
     const payment = store.payments.find((item) => item.orderId === orderId);
     let resolvedProjectId = projectId;
@@ -659,7 +701,7 @@ async function handleVerifyPayment(request, response) {
     await writeStore(store);
     await updateSupabasePayment(resolvedProjectId, paymentId);
 
-    json(response, 200, { ok: true, orderId, paymentId });
+    json(response, 200, { ok: true, provider: "cashfree", orderId, paymentId, status });
   } catch (error) {
     json(response, 500, { ok: false, error: error.message || "Could not verify payment." });
   }

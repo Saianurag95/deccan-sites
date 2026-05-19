@@ -1,31 +1,42 @@
-import {
-  clampPaymentAmount,
-  isValidEmail,
-  json,
-  makeReceiptId,
-  normalizeEmail,
-  normalizeProjectId,
-  readJson,
-} from "../_shared.js";
+import { clampPaymentAmount, isValidEmail, json, normalizeEmail, normalizeProjectId, readJson } from "../_shared.js";
 
-async function createRazorpayOrder({ amount, projectId, name, email, phone }) {
-  const auth = Buffer.from(`${process.env.RAZORPAY_KEY_ID}:${process.env.RAZORPAY_KEY_SECRET}`).toString("base64");
-  const orderResponse = await fetch("https://api.razorpay.com/v1/orders", {
+function getCashfreeBaseUrl() {
+  return process.env.CASHFREE_ENV === "production" ? "https://api.cashfree.com/pg" : "https://sandbox.cashfree.com/pg";
+}
+
+function createCashfreeOrderId(projectId) {
+  const safeProjectId = projectId.toLowerCase().replace(/[^a-z0-9_-]/g, "_");
+  return `${safeProjectId}_${Date.now()}`;
+}
+
+async function createCashfreeOrder({ amount, projectId, name, email, phone, origin }) {
+  const orderId = createCashfreeOrderId(projectId);
+  const orderResponse = await fetch(`${getCashfreeBaseUrl()}/orders`, {
     method: "POST",
     headers: {
-      Authorization: `Basic ${auth}`,
       "Content-Type": "application/json",
+      "x-api-version": process.env.CASHFREE_API_VERSION || "2025-01-01",
+      "x-client-id": process.env.CASHFREE_APP_ID,
+      "x-client-secret": process.env.CASHFREE_SECRET_KEY,
+      "x-idempotency-key": orderId,
       "User-Agent": "DeccanSites/1.0",
     },
     body: JSON.stringify({
-      amount,
-      currency: "INR",
-      receipt: makeReceiptId(),
-      notes: {
-        customer_name: name || "",
-        customer_email: email || "",
-        customer_phone: phone || "",
-        project_id: projectId || "",
+      order_id: orderId,
+      order_amount: amount,
+      order_currency: "INR",
+      customer_details: {
+        customer_id: projectId,
+        customer_name: name,
+        customer_email: email,
+        customer_phone: phone,
+      },
+      order_meta: {
+        return_url: `${origin || "https://deccan-sites.vercel.app"}/?cashfree_order_id={order_id}`,
+      },
+      order_note: `Website project payment - ${projectId}`,
+      order_tags: {
+        project_id: projectId,
         source: "deccan-sites-vercel",
       },
     }),
@@ -33,7 +44,7 @@ async function createRazorpayOrder({ amount, projectId, name, email, phone }) {
 
   const body = await orderResponse.json().catch(() => ({}));
   if (!orderResponse.ok) {
-    throw new Error(body.error?.description || "Could not create payment order.");
+    throw new Error(body.message || body.error?.message || "Could not create Cashfree payment order.");
   }
 
   return body;
@@ -68,25 +79,28 @@ export default async function handler(request, response) {
       return;
     }
 
-    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+    if (!process.env.CASHFREE_APP_ID || !process.env.CASHFREE_SECRET_KEY) {
       json(response, 503, {
         ok: false,
-        error: "Payment gateway is not configured yet. Add Razorpay keys to the server environment.",
+        error: "Payment gateway is not configured yet. Add Cashfree keys to the server environment.",
       });
       return;
     }
 
-    const order = await createRazorpayOrder({ amount: amountRupees * 100, projectId, name, email, phone });
+    const origin = request.headers.origin || `https://${request.headers.host}`;
+    const order = await createCashfreeOrder({ amount: amountRupees, projectId, name, email, phone, origin });
 
     json(response, 200, {
       ok: true,
-      orderId: order.id,
-      amount: order.amount,
-      currency: order.currency,
-      keyId: process.env.RAZORPAY_KEY_ID,
+      provider: "cashfree",
+      orderId: order.order_id,
+      cfOrderId: order.cf_order_id,
+      paymentSessionId: order.payment_session_id,
+      amount: order.order_amount,
+      currency: order.order_currency,
+      mode: process.env.CASHFREE_ENV === "production" ? "production" : "sandbox",
       name: "Deccan Sites",
       description: `Website project payment - ${projectId}`,
-      prefill: { name, email, contact: phone },
     });
   } catch (error) {
     json(response, 500, { ok: false, error: error.message || "Could not create payment order." });

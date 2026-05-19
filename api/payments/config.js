@@ -8,8 +8,9 @@ export default function handler(request, response) {
 
   json(response, 200, {
     ok: true,
-    enabled: Boolean(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET),
-    keyId: process.env.RAZORPAY_KEY_ID || "",
+    provider: "cashfree",
+    enabled: Boolean(process.env.CASHFREE_APP_ID && process.env.CASHFREE_SECRET_KEY),
+    mode: process.env.CASHFREE_ENV === "production" ? "production" : "sandbox",
     currency: "INR",
   });
 }

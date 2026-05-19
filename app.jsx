@@ -358,26 +358,26 @@ function ProjectPortal() {
     return type + pagePrice + domain + addOns;
   }, [form.websiteType, form.pages, form.domainOption, form.addOns]);
 
-  function loadRazorpayCheckout() {
-    if (window.Razorpay) {
+  function loadCashfreeCheckout() {
+    if (window.Cashfree) {
       return Promise.resolve();
     }
 
     return new Promise((resolve, reject) => {
-      const existingScript = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+      const existingScript = document.querySelector('script[src="https://sdk.cashfree.com/js/v3/cashfree.js"]');
       const script = existingScript || document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
       script.async = true;
-      script.onload = () => (window.Razorpay ? resolve() : reject(new Error("Razorpay checkout did not initialize.")));
-      script.onerror = () => reject(new Error("Razorpay checkout could not load. Check internet access, browser blocking, or ad blocker settings."));
+      script.onload = () => (window.Cashfree ? resolve() : reject(new Error("Cashfree checkout did not initialize.")));
+      script.onerror = () => reject(new Error("Cashfree checkout could not load. Check internet access, browser blocking, or ad blocker settings."));
 
       if (!existingScript) {
         document.body.appendChild(script);
       }
 
       setTimeout(() => {
-        if (!window.Razorpay) {
-          reject(new Error("Razorpay checkout could not load. Check internet access, browser blocking, or ad blocker settings."));
+        if (!window.Cashfree) {
+          reject(new Error("Cashfree checkout could not load. Check internet access, browser blocking, or ad blocker settings."));
         }
       }, 12000);
     });
@@ -410,10 +410,10 @@ function ProjectPortal() {
 
     try {
       if (!config.enabled) {
-        throw new Error("Payment gateway is ready in code. Add Razorpay keys to activate live payments.");
+        throw new Error("Payment gateway is ready in code. Add Cashfree keys to activate live payments.");
       }
 
-      await loadRazorpayCheckout();
+      await loadCashfreeCheckout();
 
       const orderResponse = await fetch("/api/payments/create-order", {
         method: "POST",
@@ -428,30 +428,26 @@ function ProjectPortal() {
       });
       const order = await readApiJson(orderResponse);
 
-      const checkout = new window.Razorpay({
-        key: order.keyId,
-        amount: order.amount,
-        currency: order.currency,
-        name: order.name,
-        description: order.description,
-        order_id: order.orderId,
-        prefill: order.prefill,
-        theme: { color: "#d7b56d" },
-        handler: async (paymentResult) => {
-          const verifyResponse = await fetch("/api/payments/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...paymentResult, projectId: activeProject?.projectId }),
-          });
-          await readApiJson(verifyResponse);
-          setStatus("Payment verified. Your project booking is recorded.");
-        },
-        modal: {
-          ondismiss: () => setStatus("Payment window closed before completion."),
-        },
+      const cashfree = window.Cashfree({ mode: order.mode || config.mode || "sandbox" });
+      const result = await cashfree.checkout({
+        paymentSessionId: order.paymentSessionId,
+        redirectTarget: "_modal",
       });
 
-      checkout.open();
+      if (result?.error) {
+        throw new Error(result.error.message || "Payment window closed before completion.");
+      }
+
+      const verifyResponse = await fetch("/api/payments/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: order.orderId, projectId: activeProject?.projectId }),
+      });
+      const verified = await readApiJson(verifyResponse);
+      if (!verified.ok) {
+        throw new Error(verified.error || "Payment is not confirmed yet.");
+      }
+      setStatus("Payment verified through Cashfree. Your project booking is recorded.");
     } catch (error) {
       setStatus(error.message || "Payment could not be started.");
     } finally {
@@ -546,7 +542,7 @@ function ProjectPortal() {
                 {loading || saving ? "Preparing payment..." : "Pay estimated amount"}
               </button>
               <p className="text-xs font-bold leading-5 text-stone-600">
-                After the portal details are saved, this amount is sent to the payment gateway. Payment activates after Razorpay keys are added.
+                After the portal details are saved, this amount is sent to Cashfree. Payment activates after Cashfree keys are added.
               </p>
             </form>
 
