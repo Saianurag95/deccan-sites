@@ -3,6 +3,7 @@ import {
   createProjectId,
   domainOptions,
   estimateAddOns,
+  insertSupabaseProject,
   isValidEmail,
   json,
   normalizeEmail,
@@ -79,6 +80,8 @@ export default async function handler(request, response) {
       notes,
       createdAt: new Date().toISOString(),
     };
+
+    await insertSupabaseProject(project);
 
     json(response, 200, {
       ok: true,

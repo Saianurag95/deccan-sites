@@ -85,3 +85,83 @@ export function makeReceiptId() {
 export function normalizeProjectId(projectId) {
   return String(projectId || "").trim().toUpperCase();
 }
+
+export function toSupabaseProject(project) {
+  return {
+    project_id: project.projectId,
+    name: project.name,
+    email: project.email,
+    phone: project.phone,
+    business_name: project.businessName,
+    business_location: project.businessLocation,
+    business_category: project.businessCategory,
+    website_type: project.websiteType,
+    pages: project.pages,
+    domain_option: project.domainOption,
+    add_ons: project.addOns || [],
+    sections: project.sections || [],
+    idea: project.idea,
+    reference: project.references,
+    content_readiness: project.contentReadiness,
+    logo_readiness: project.logoReadiness,
+    launch_date: project.launchDate,
+    notes: project.notes,
+    estimated_amount: project.estimatedAmount,
+    payment_status: project.paymentStatus || "not_paid",
+  };
+}
+
+export async function insertSupabaseProject(project) {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error("Supabase is not configured. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.");
+  }
+
+  const response = await fetch(`${supabaseUrl}/rest/v1/projects`, {
+    method: "POST",
+    headers: {
+      apikey: serviceRoleKey,
+      Authorization: `Bearer ${serviceRoleKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+    },
+    body: JSON.stringify(toSupabaseProject(project)),
+  });
+
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(`Supabase insert failed: ${text || response.status}`);
+  }
+
+  return text ? JSON.parse(text) : [];
+}
+
+export async function updateSupabasePayment(projectId, paymentId) {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey || !projectId) {
+    return;
+  }
+
+  const response = await fetch(`${supabaseUrl}/rest/v1/projects?project_id=eq.${encodeURIComponent(projectId)}`, {
+    method: "PATCH",
+    headers: {
+      apikey: serviceRoleKey,
+      Authorization: `Bearer ${serviceRoleKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify({
+      payment_status: "paid",
+      payment_id: paymentId,
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Supabase payment update failed: ${text || response.status}`);
+  }
+}

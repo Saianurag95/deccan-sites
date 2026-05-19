@@ -36,6 +36,8 @@ const resendApiKey = process.env.RESEND_API_KEY || "";
 const otpFromEmail = process.env.OTP_FROM_EMAIL || "Deccan Sites <onboarding@resend.dev>";
 const razorpayKeyId = process.env.RAZORPAY_KEY_ID || "";
 const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET || "";
+const supabaseUrl = process.env.SUPABASE_URL || "";
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 const isProduction = process.env.NODE_ENV === "production";
 const host = process.env.HOST || (isProduction ? "0.0.0.0" : "127.0.0.1");
 
@@ -128,6 +130,80 @@ function makeReceiptId() {
 
 function normalizeProjectId(projectId) {
   return String(projectId || "").trim().toUpperCase();
+}
+
+function toSupabaseProject(project) {
+  return {
+    project_id: project.projectId,
+    name: project.name,
+    email: project.email,
+    phone: project.phone,
+    business_name: project.businessName,
+    business_location: project.businessLocation,
+    business_category: project.businessCategory,
+    website_type: project.websiteType,
+    pages: project.pages,
+    domain_option: project.domainOption,
+    add_ons: project.addOns || [],
+    sections: project.sections || [],
+    idea: project.idea,
+    reference: project.references,
+    content_readiness: project.contentReadiness,
+    logo_readiness: project.logoReadiness,
+    launch_date: project.launchDate,
+    notes: project.notes,
+    estimated_amount: project.estimatedAmount,
+    payment_status: project.paymentStatus || "not_paid",
+  };
+}
+
+async function insertSupabaseProject(project) {
+  if (!supabaseUrl || !supabaseServiceRoleKey) {
+    throw new Error("Supabase is not configured. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.");
+  }
+
+  const response = await fetch(`${supabaseUrl}/rest/v1/projects`, {
+    method: "POST",
+    headers: {
+      apikey: supabaseServiceRoleKey,
+      Authorization: `Bearer ${supabaseServiceRoleKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+    },
+    body: JSON.stringify(toSupabaseProject(project)),
+  });
+
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(`Supabase insert failed: ${text || response.status}`);
+  }
+
+  return text ? JSON.parse(text) : [];
+}
+
+async function updateSupabasePayment(projectId, paymentId) {
+  if (!supabaseUrl || !supabaseServiceRoleKey || !projectId) {
+    return;
+  }
+
+  const response = await fetch(`${supabaseUrl}/rest/v1/projects?project_id=eq.${encodeURIComponent(projectId)}`, {
+    method: "PATCH",
+    headers: {
+      apikey: supabaseServiceRoleKey,
+      Authorization: `Bearer ${supabaseServiceRoleKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify({
+      payment_status: "paid",
+      payment_id: paymentId,
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Supabase payment update failed: ${text || response.status}`);
+  }
 }
 
 const websiteTypes = [
@@ -409,6 +485,8 @@ async function handleCreateProject(request, response) {
       createdAt: new Date().toISOString(),
     };
 
+    await insertSupabaseProject(project);
+
     store.projects.push(project);
     await writeStore(store);
 
@@ -538,6 +616,7 @@ async function handleVerifyPayment(request, response) {
     const orderId = String(body.razorpay_order_id || "").trim();
     const paymentId = String(body.razorpay_payment_id || "").trim();
     const signature = String(body.razorpay_signature || "").trim();
+    const projectId = normalizeProjectId(body.projectId);
 
     if (!orderId || !paymentId || !signature) {
       json(response, 400, { ok: false, error: "Missing payment verification details." });
@@ -556,10 +635,12 @@ async function handleVerifyPayment(request, response) {
 
     const store = normalizeStore(await readStore());
     const payment = store.payments.find((item) => item.orderId === orderId);
+    let resolvedProjectId = projectId;
     if (payment) {
       payment.status = "paid";
       payment.paymentId = paymentId;
       payment.verifiedAt = new Date().toISOString();
+      resolvedProjectId = resolvedProjectId || payment.projectId;
       const project = store.projects.find((item) => item.projectId === payment.projectId);
       if (project) {
         project.status = "paid";
@@ -576,6 +657,7 @@ async function handleVerifyPayment(request, response) {
     }
 
     await writeStore(store);
+    await updateSupabasePayment(resolvedProjectId, paymentId);
 
     json(response, 200, { ok: true, orderId, paymentId });
   } catch (error) {

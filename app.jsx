@@ -441,7 +441,7 @@ function ProjectPortal() {
           const verifyResponse = await fetch("/api/payments/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(paymentResult),
+            body: JSON.stringify({ ...paymentResult, projectId: activeProject?.projectId }),
           });
           await readApiJson(verifyResponse);
           setStatus("Payment verified. Your project booking is recorded.");

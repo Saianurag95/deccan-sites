@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { json, readJson } from "../_shared.js";
+import { json, normalizeProjectId, readJson, updateSupabasePayment } from "../_shared.js";
 
 export default async function handler(request, response) {
   if (request.method !== "POST") {
@@ -17,6 +17,7 @@ export default async function handler(request, response) {
     const orderId = String(body.razorpay_order_id || "").trim();
     const paymentId = String(body.razorpay_payment_id || "").trim();
     const signature = String(body.razorpay_signature || "").trim();
+    const projectId = normalizeProjectId(body.projectId);
 
     if (!orderId || !paymentId || !signature) {
       json(response, 400, { ok: false, error: "Missing payment verification details." });
@@ -32,6 +33,8 @@ export default async function handler(request, response) {
       json(response, 400, { ok: false, error: "Payment signature verification failed." });
       return;
     }
+
+    await updateSupabasePayment(projectId, paymentId);
 
     json(response, 200, { ok: true, orderId, paymentId });
   } catch (error) {
