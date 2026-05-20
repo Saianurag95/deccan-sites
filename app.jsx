@@ -144,7 +144,7 @@ function Hero() {
   return (
     <section id="top" className="relative isolate overflow-hidden px-4 pb-20 pt-56 sm:px-6 sm:pt-44 lg:min-h-[94svh] lg:px-8 lg:pt-40">
       <div className="absolute inset-0 -z-30 hero-bg" />
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_18%_16%,rgba(139,92,246,.28),transparent_30%),radial-gradient(circle_at_84%_14%,rgba(217,70,239,.2),transparent_28%),linear-gradient(180deg,rgba(7,10,26,.82),#0b1028_86%)]" />
+      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_18%_16%,rgba(124,58,237,.16),transparent_30%),radial-gradient(circle_at_84%_14%,rgba(14,165,233,.14),transparent_28%),linear-gradient(180deg,rgba(248,250,252,.94),#eef4ff_86%)]" />
       <div className="lux-grid" />
 
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[minmax(0,1fr)_440px] lg:items-center">
@@ -181,7 +181,7 @@ function Hero() {
             <span className="text-sm font-extrabold text-[#8a641d]">Featured package</span>
             <span className="rounded-full bg-slate-900/8 px-3 py-1 text-xs font-extrabold text-[#18202d]">Pilot pricing</span>
           </div>
-          <div className="rounded-3xl bg-[linear-gradient(135deg,rgba(255,255,255,.16),rgba(139,92,246,.22),rgba(217,70,239,.12))] p-6 text-[#18202d]">
+          <div className="rounded-3xl bg-[linear-gradient(135deg,#ffffff,#f1f5ff_48%,#f7f2ff)] p-6 text-[#18202d]">
             <p className="text-xs font-extrabold uppercase tracking-[.14em] text-[#8a641d]">Business site</p>
             <h2 className="mt-5 text-4xl font-black leading-none tracking-[-.04em]">₹2,999</h2>
             <p className="mt-4 leading-7 text-slate-700">A professional website for service businesses, shops, cafes, clinics, creators, and local brands.</p>
