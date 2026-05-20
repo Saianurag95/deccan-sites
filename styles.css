@@ -1,20 +1,14 @@
 :root {
   color-scheme: light;
-  --bg: #f6f8fc;
-  --panel: rgba(255, 255, 255, 0.72);
-  --line: rgba(25, 36, 64, 0.11);
-  --text: #172033;
-  --muted: #667085;
-  --gold: #7c3aed;
-  --gold-soft: #6941c6;
-  --sage: #0ea5e9;
-  --ink: #172033;
-  --surface: rgba(255, 255, 255, 0.78);
-  --purple: #7c3aed;
-  --purple-hot: #a855f7;
-  --electric: #4f46e5;
-  --cyan: #0ea5e9;
-  --mint: #10b981;
+  --bg: #fbfbfa;
+  --panel: rgba(251, 251, 250, 0.78);
+  --line: #e5e5e5;
+  --text: #101415;
+  --muted: rgba(16, 20, 21, 0.66);
+  --gold: #c5a059;
+  --gold-soft: #8b6d2b;
+  --ink: #101415;
+  --surface: rgba(251, 251, 250, 0.82);
 }
 
 * {
@@ -28,10 +22,11 @@ html {
 body {
   margin: 0;
   background:
-    radial-gradient(circle at 12% 7%, rgba(124, 58, 237, 0.14), transparent 30%),
-    radial-gradient(circle at 86% 6%, rgba(14, 165, 233, 0.13), transparent 28%),
-    radial-gradient(circle at 68% 45%, rgba(16, 185, 129, 0.08), transparent 34%),
-    linear-gradient(180deg, #fbfcff 0%, #f3f6fb 48%, #edf2f8 100%);
+    linear-gradient(rgba(16, 20, 21, 0.024) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 20, 21, 0.024) 1px, transparent 1px),
+    radial-gradient(circle at 12% 7%, rgba(197, 160, 89, 0.12), transparent 30%),
+    linear-gradient(180deg, #fbfbfa 0%, #f6f4ee 52%, #fbfbfa 100%);
+  background-size: 56px 56px, 56px 56px, auto, auto;
   color: var(--text);
   font-family: Manrope, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -44,15 +39,15 @@ textarea {
 }
 
 .font-display {
-  font-family: "Instrument Serif", Georgia, serif;
+  font-family: Manrope, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .hero-bg {
   background:
-    linear-gradient(rgba(25, 36, 64, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(25, 36, 64, 0.045) 1px, transparent 1px),
-    radial-gradient(circle at 62% 20%, rgba(124, 58, 237, 0.16), transparent 24%);
-  background-size: 54px 54px, 54px 54px, auto;
+    linear-gradient(rgba(16, 20, 21, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 20, 21, 0.028) 1px, transparent 1px),
+    radial-gradient(circle at 62% 20%, rgba(197, 160, 89, 0.12), transparent 24%);
+  background-size: 56px 56px, 56px 56px, auto;
 }
 
 .lux-grid {
@@ -60,40 +55,39 @@ textarea {
   inset: 0;
   z-index: -10;
   pointer-events: none;
-  opacity: 0.2;
+  opacity: 0.16;
   background-image:
-    linear-gradient(rgba(25, 36, 64, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(25, 36, 64, 0.08) 1px, transparent 1px);
-  background-size: 48px 48px;
+    linear-gradient(rgba(16, 20, 21, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 20, 21, 0.08) 1px, transparent 1px);
+  background-size: 56px 56px;
   mask-image: linear-gradient(180deg, #000, transparent 82%);
 }
 
 .glass {
   border: 1px solid var(--line);
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(239, 244, 255, 0.52) 48%, rgba(255, 255, 255, 0.62)),
-    rgba(255, 255, 255, 0.54);
-  box-shadow: 0 32px 96px rgba(31, 41, 71, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(40px) saturate(165%);
-  -webkit-backdrop-filter: blur(40px) saturate(165%);
+  border-radius: 6px !important;
+  background: rgba(251, 251, 250, 0.8);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
 }
 
 .panel {
   border: 1px solid var(--line);
-  background:
-    linear-gradient(150deg, rgba(255, 255, 255, 0.74), rgba(242, 246, 255, 0.5) 52%, rgba(255, 255, 255, 0.58)),
-    var(--panel);
-  box-shadow: 0 30px 86px rgba(31, 41, 71, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(38px) saturate(165%);
-  -webkit-backdrop-filter: blur(38px) saturate(165%);
+  border-radius: 6px !important;
+  background: rgba(251, 251, 250, 0.78);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
 }
 
 .shine-btn {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #172033, #4f46e5) !important;
+  border-radius: 6px !important;
+  background: #101415 !important;
   color: #fff !important;
-  box-shadow: 0 18px 48px rgba(79, 70, 229, 0.22);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .shine-btn::after {
@@ -110,11 +104,11 @@ textarea {
 }
 
 .chip {
-  border: 1px solid rgba(25, 36, 64, 0.1);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(251, 251, 250, 0.76);
   padding: 0.55rem 0.8rem;
-  color: #475467;
+  color: rgba(16, 20, 21, 0.7);
   font-size: 0.76rem;
   font-weight: 900;
   letter-spacing: 0.08em;
@@ -123,20 +117,21 @@ textarea {
 
 .showcase-card,
 .demo-card {
-  border: 1px solid rgba(25, 36, 64, 0.1);
+  border: 1px solid var(--line);
+  border-radius: 6px !important;
   background:
-    radial-gradient(circle at 85% 12%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 32%),
-    linear-gradient(180deg, rgba(255,255,255,.76), rgba(255,255,255,.52));
-  box-shadow: 0 30px 92px rgba(31, 41, 71, 0.15), inset 0 1px 0 rgba(255,255,255,.88);
-  backdrop-filter: blur(38px) saturate(160%);
-  -webkit-backdrop-filter: blur(38px) saturate(160%);
+    radial-gradient(circle at 85% 12%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 32%),
+    linear-gradient(180deg, rgba(251,251,250,.82), rgba(251,251,250,.66));
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .demo-card {
   background:
-    radial-gradient(circle at 20% 0%, color-mix(in srgb, var(--glow) 34%, transparent), transparent 38%),
-    radial-gradient(circle at 95% 20%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 34%),
-    linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.035));
+    radial-gradient(circle at 20% 0%, color-mix(in srgb, var(--glow) 14%, transparent), transparent 38%),
+    radial-gradient(circle at 95% 20%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 34%),
+    linear-gradient(180deg, rgba(251,251,250,.82), rgba(251,251,250,.62));
 }
 
 .demo-browser {
@@ -157,9 +152,8 @@ textarea {
 
 .portal-light {
   background:
-    radial-gradient(circle at 15% 10%, rgba(124, 58, 237, 0.12), transparent 29%),
-    radial-gradient(circle at 90% 18%, rgba(14, 165, 233, 0.11), transparent 26%),
-    linear-gradient(180deg, #f8fbff 0%, #f1f5fb 52%, #edf2f8 100%);
+    radial-gradient(circle at 15% 10%, rgba(197, 160, 89, 0.1), transparent 29%),
+    linear-gradient(180deg, #fbfbfa 0%, #f6f4ee 52%, #fbfbfa 100%);
 }
 
 main > section:not(#top) {
@@ -173,13 +167,12 @@ main > section:not(#top) {
 
 #project-portal-form,
 #portal aside {
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(242, 246, 255, 0.54)),
-    rgba(255, 255, 255, 0.6) !important;
-  border-color: rgba(25, 36, 64, 0.11) !important;
-  box-shadow: 0 32px 96px rgba(31, 41, 71, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-  backdrop-filter: blur(38px) saturate(165%);
-  -webkit-backdrop-filter: blur(38px) saturate(165%);
+  border-radius: 6px !important;
+  background: rgba(251, 251, 250, 0.82) !important;
+  border-color: var(--line) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  backdrop-filter: blur(18px) saturate(125%);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
 }
 
 body [class*="text-[#18202d]"],
@@ -190,7 +183,7 @@ body [class*="text-[#17120b]"] {
 
 body [class*="text-[#8a641d]"],
 body [class*="text-[#8f6b1f]"] {
-  color: var(--gold-soft) !important;
+  color: var(--gold) !important;
 }
 
 body [class*="text-slate-"],
@@ -202,7 +195,7 @@ body [class*="bg-white"],
 body [class*="bg-[#fff8e8]"],
 body [class*="bg-[#fbfaf6]"],
 body [class*="bg-[#fff4d9]"] {
-  background: rgba(255, 255, 255, 0.72) !important;
+  background: rgba(251, 251, 250, 0.8) !important;
 }
 
 body [class*="border-slate"],
@@ -216,22 +209,58 @@ body [class*="bg-[#c99a3d]"],
 body [class*="bg-[#d7b56d]"],
 body [class*="bg-[#18202d]"],
 body [class*="bg-[#17130d]"] {
-  background: linear-gradient(135deg, #172033, #4f46e5) !important;
+  background: var(--text) !important;
 }
 
 input,
 select,
 textarea {
   color: var(--text) !important;
-  background: rgba(255, 255, 255, 0.84) !important;
+  border-radius: 6px !important;
+  background: rgba(251, 251, 250, 0.86) !important;
   border-color: var(--line) !important;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: rgba(217, 70, 239, 0.74) !important;
-  background: #fff !important;
+  border-color: var(--gold) !important;
+  background: #fbfbfa !important;
+}
+
+header {
+  border-radius: 6px !important;
+  background: rgba(251, 251, 250, 0.8) !important;
+  border-color: var(--line) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  backdrop-filter: blur(18px) saturate(125%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(125%) !important;
+}
+
+header nav,
+header > a:last-child {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+body [class*="rounded-2xl"],
+body [class*="rounded-3xl"],
+body [class*="rounded-xl"],
+body [class*="rounded-[1.75rem]"] {
+  border-radius: 6px !important;
+}
+
+h1,
+h2,
+h3,
+strong {
+  color: var(--text) !important;
+  letter-spacing: -0.02em;
+}
+
+p,
+li {
+  line-height: 1.6;
 }
 
 .mobile-scroll {
@@ -245,7 +274,7 @@ textarea:focus {
 
 @media (max-width: 760px) {
   body {
-    background: linear-gradient(180deg, #fbfcff 0%, #f3f6fb 62%, #edf2f8 100%);
+    background: linear-gradient(180deg, #fbfbfa 0%, #f6f4ee 62%, #fbfbfa 100%);
   }
 
   main > section:not(#top) {
