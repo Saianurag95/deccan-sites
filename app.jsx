@@ -153,10 +153,10 @@ function Hero() {
             <span className="h-2 w-2 rounded-full bg-[#c99a3d] shadow-[0_0_0_6px_rgba(201,154,61,.16)]" />
             {brand.city} · fast delivery for first 5 orders
           </div>
-          <h1 className="mt-7 max-w-5xl font-display text-[clamp(4rem,9vw,8.4rem)] leading-[.82] tracking-[-.02em] text-[#18202d]">
+          <h1 className="mt-7 max-w-4xl font-display text-[clamp(3.45rem,7.5vw,7rem)] leading-[.86] tracking-[-.045em] text-[#18202d]">
             Websites that make businesses look expensive.
           </h1>
-          <p className="mt-8 max-w-3xl text-[clamp(1.02rem,1.35vw,1.24rem)] font-normal leading-8 text-slate-700">
+          <p className="mt-6 max-w-3xl text-[clamp(1.05rem,1.55vw,1.36rem)] font-medium leading-8 text-slate-700">
             Deccan Sites designs clean, responsive websites and web experiences for businesses that want a polished online presence without agency-level pricing.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
