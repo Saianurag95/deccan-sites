@@ -7,6 +7,7 @@ import {
   isValidEmail,
   json,
   normalizeEmail,
+  notifyAdminProjectCreated,
   readJson,
   websiteTypes,
 } from "./_shared.js";
@@ -82,6 +83,9 @@ export default async function handler(request, response) {
     };
 
     await insertSupabaseProject(project);
+    await notifyAdminProjectCreated(project).catch((error) => {
+      console.error(error.message || error);
+    });
 
     json(response, 200, {
       ok: true,

@@ -1,4 +1,4 @@
-import { json, normalizeProjectId, readJson, updateSupabasePayment } from "../_shared.js";
+import { json, normalizeProjectId, notifyAdminPaymentConfirmed, readJson, updateSupabasePayment } from "../_shared.js";
 
 function cashfreeValue(...names) {
   return names.map((name) => String(process.env[name] || "").trim()).find(Boolean) || "";
@@ -70,6 +70,14 @@ export default async function handler(request, response) {
     }
 
     await updateSupabasePayment(projectId, order.cf_order_id || order.order_id || orderId);
+    await notifyAdminPaymentConfirmed({
+      projectId,
+      orderId,
+      paymentId: order.cf_order_id || order.order_id || orderId,
+      status,
+    }).catch((error) => {
+      console.error(error.message || error);
+    });
 
     json(response, 200, {
       ok: true,

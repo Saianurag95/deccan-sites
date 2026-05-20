@@ -37,6 +37,8 @@ const otpFromEmail = process.env.OTP_FROM_EMAIL || "Deccan Sites <onboarding@res
 function envValue(...names) {
   return names.map((name) => String(process.env[name] || "").trim()).find(Boolean) || "";
 }
+const adminNotifyEmail = envValue("ADMIN_NOTIFY_EMAIL", "NOTIFY_EMAIL");
+const notificationFromEmail = envValue("NOTIFICATION_FROM_EMAIL", "OTP_FROM_EMAIL") || "Deccan Sites <onboarding@resend.dev>";
 const cashfreeAppId = envValue("CASHFREE_APP_ID", "CASHFREE_CLIENT_ID");
 const cashfreeSecretKey = envValue("CASHFREE_SECRET_KEY", "CASHFREE_CLIENT_SECRET");
 const cashfreeEnv = envValue("CASHFREE_ENV").toLowerCase() === "production" ? "production" : "sandbox";
@@ -105,6 +107,19 @@ function normalizeEmail(email) {
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function formatRupees(amount) {
+  return `Rs.${Number(amount || 0).toLocaleString("en-IN")}`;
 }
 
 function hashValue(value) {
@@ -305,6 +320,116 @@ async function sendOtpEmail(email, code) {
   return { delivery: "email" };
 }
 
+function adminRecipients() {
+  return adminNotifyEmail
+    .split(",")
+    .map((email) => normalizeEmail(email))
+    .filter(isValidEmail);
+}
+
+async function sendAdminEmail({ subject, text, html }) {
+  const recipients = adminRecipients();
+
+  if (!resendApiKey || recipients.length === 0) {
+    return { delivery: "disabled" };
+  }
+
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${resendApiKey}`,
+      "Content-Type": "application/json",
+      "User-Agent": "DeccanSites/1.0",
+    },
+    body: JSON.stringify({
+      from: notificationFromEmail,
+      to: recipients,
+      subject,
+      text,
+      html,
+    }),
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Admin notification failed: ${body || response.status}`);
+  }
+
+  return { delivery: "email" };
+}
+
+async function notifyAdminProjectCreated(project) {
+  const subject = `New Deccan Sites brief: ${project.businessName} (${project.projectId})`;
+  const text = [
+    `New project brief: ${project.projectId}`,
+    `Client: ${project.name}`,
+    `Email: ${project.email}`,
+    `WhatsApp: ${project.phone}`,
+    `Business: ${project.businessName}`,
+    `Category: ${project.businessCategory}`,
+    `Location: ${project.businessLocation || "Not provided"}`,
+    `Website type: ${project.websiteType}`,
+    `Pages: ${project.pages}`,
+    `Domain: ${project.domainOption}`,
+    `Add-ons: ${(project.addOns || []).join(", ") || "None"}`,
+    `Preferred launch: ${project.launchDate || "Not provided"}`,
+    `Estimate: ${formatRupees(project.estimatedAmount)}`,
+    "",
+    "Idea:",
+    project.idea,
+    "",
+    "Notes:",
+    project.notes || "None",
+  ].join("\n");
+
+  const html = `
+    <div style="font-family:Manrope,Inter,Arial,sans-serif;line-height:1.6;color:#101415;background:#fbfbfa;padding:24px">
+      <p style="margin:0 0 8px;color:#c5a059;font-weight:800;letter-spacing:.08em;text-transform:uppercase">New project brief</p>
+      <h1 style="margin:0 0 18px;font-size:28px;line-height:1.15">${escapeHtml(project.businessName)}</h1>
+      <div style="background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:18px">
+        <p><strong>Project ID:</strong> ${escapeHtml(project.projectId)}</p>
+        <p><strong>Client:</strong> ${escapeHtml(project.name)} | ${escapeHtml(project.email)} | ${escapeHtml(project.phone)}</p>
+        <p><strong>Business:</strong> ${escapeHtml(project.businessCategory)} in ${escapeHtml(project.businessLocation || "Not provided")}</p>
+        <p><strong>Website:</strong> ${escapeHtml(project.websiteType)} | ${escapeHtml(project.pages)} page(s) | ${escapeHtml(project.domainOption)}</p>
+        <p><strong>Add-ons:</strong> ${escapeHtml((project.addOns || []).join(", ") || "None")}</p>
+        <p><strong>Preferred launch:</strong> ${escapeHtml(project.launchDate || "Not provided")}</p>
+        <p><strong>Estimate:</strong> ${escapeHtml(formatRupees(project.estimatedAmount))}</p>
+        <hr style="border:0;border-top:1px solid #e5e5e5;margin:18px 0" />
+        <p><strong>Idea:</strong><br />${escapeHtml(project.idea)}</p>
+        <p><strong>Notes:</strong><br />${escapeHtml(project.notes || "None")}</p>
+      </div>
+    </div>
+  `;
+
+  return sendAdminEmail({ subject, text, html });
+}
+
+async function notifyAdminPaymentConfirmed({ projectId, orderId, paymentId, status }) {
+  const subject = `Payment confirmed: ${projectId || orderId}`;
+  const text = [
+    "A Deccan Sites payment was confirmed.",
+    `Project ID: ${projectId || "Not provided"}`,
+    `Order ID: ${orderId}`,
+    `Payment ID: ${paymentId}`,
+    `Status: ${status}`,
+  ].join("\n");
+
+  const html = `
+    <div style="font-family:Manrope,Inter,Arial,sans-serif;line-height:1.6;color:#101415;background:#fbfbfa;padding:24px">
+      <p style="margin:0 0 8px;color:#c5a059;font-weight:800;letter-spacing:.08em;text-transform:uppercase">Payment confirmed</p>
+      <h1 style="margin:0 0 18px;font-size:28px;line-height:1.15">${escapeHtml(projectId || orderId)}</h1>
+      <div style="background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:18px">
+        <p><strong>Project ID:</strong> ${escapeHtml(projectId || "Not provided")}</p>
+        <p><strong>Order ID:</strong> ${escapeHtml(orderId)}</p>
+        <p><strong>Payment ID:</strong> ${escapeHtml(paymentId)}</p>
+        <p><strong>Status:</strong> ${escapeHtml(status)}</p>
+      </div>
+    </div>
+  `;
+
+  return sendAdminEmail({ subject, text, html });
+}
+
 async function handleRequestOtp(request, response) {
   try {
     const body = await readJson(request);
@@ -491,6 +616,9 @@ async function handleCreateProject(request, response) {
 
     store.projects.push(project);
     await writeStore(store);
+    await notifyAdminProjectCreated(project).catch((error) => {
+      console.error(error.message || error);
+    });
 
     json(response, 200, {
       ok: true,
@@ -711,6 +839,14 @@ async function handleVerifyPayment(request, response) {
 
     await writeStore(store);
     await updateSupabasePayment(resolvedProjectId, paymentId);
+    await notifyAdminPaymentConfirmed({
+      projectId: resolvedProjectId,
+      orderId,
+      paymentId,
+      status,
+    }).catch((error) => {
+      console.error(error.message || error);
+    });
 
     json(response, 200, { ok: true, provider: "cashfree", orderId, paymentId, status });
   } catch (error) {
