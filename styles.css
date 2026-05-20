@@ -157,12 +157,79 @@ textarea {
 }
 
 main > section:not(#top) {
-  padding-top: 120px !important;
-  padding-bottom: 120px !important;
+  padding-top: 144px !important;
+  padding-bottom: 144px !important;
 }
 
 .pricing-card {
   padding: 24px !important;
+}
+
+.bento-grid {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.bento-card {
+  min-height: 280px;
+  grid-column: span 4;
+  transition: transform 180ms ease, opacity 180ms ease, border-color 180ms ease;
+}
+
+.bento-card:hover {
+  opacity: 0.92;
+  transform: scale(0.99);
+  border-color: rgba(197, 160, 89, 0.42);
+}
+
+.bento-card-0,
+.bento-card-5 {
+  grid-column: span 6;
+}
+
+.bento-card-2 {
+  grid-column: span 5;
+}
+
+.bento-card-3 {
+  grid-column: span 7;
+}
+
+.cinematic-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border: 1px solid var(--line);
+  background: var(--line);
+  gap: 1px;
+}
+
+.cinematic-steps span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: rgba(249, 249, 248, 0.82);
+  color: rgba(16, 20, 21, 0.5);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  padding: 14px;
+  text-transform: uppercase;
+}
+
+.cinematic-steps b {
+  color: rgba(16, 20, 21, 0.42);
+  font-size: 0.74rem;
+}
+
+.cinematic-steps .is-active {
+  background: rgba(197, 160, 89, 0.12);
+  color: var(--text);
+}
+
+.cinematic-steps .is-active b {
+  color: var(--gold);
 }
 
 #project-portal-form,
@@ -228,6 +295,22 @@ textarea:focus {
   background: #fbfbfa !important;
 }
 
+a,
+button,
+label {
+  transition: transform 180ms ease, opacity 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+a:hover,
+button:hover {
+  opacity: 0.92;
+}
+
+button:active,
+.shine-btn:active {
+  transform: scale(0.98);
+}
+
 header {
   border-radius: 6px !important;
   background: rgba(251, 251, 250, 0.8) !important;
@@ -280,5 +363,21 @@ li {
   main > section:not(#top) {
     padding-top: 88px !important;
     padding-bottom: 88px !important;
+  }
+
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-card,
+  .bento-card-0,
+  .bento-card-2,
+  .bento-card-3,
+  .bento-card-5 {
+    grid-column: auto;
+  }
+
+  .cinematic-steps {
+    grid-template-columns: 1fr;
   }
 }

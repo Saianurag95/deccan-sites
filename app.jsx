@@ -153,10 +153,10 @@ function Hero() {
             <span className="h-2 w-2 rounded-full bg-[#c99a3d] shadow-[0_0_0_6px_rgba(201,154,61,.16)]" />
             {brand.city} · fast delivery for first 5 orders
           </div>
-          <h1 className="mt-7 max-w-4xl font-display text-[clamp(3.45rem,7.5vw,7rem)] leading-[.86] tracking-[-.045em] text-[#18202d]">
+          <h1 className="mt-7 max-w-5xl font-display text-[clamp(4rem,9vw,8.4rem)] leading-[.82] tracking-[-.02em] text-[#18202d]">
             Websites that make businesses look expensive.
           </h1>
-          <p className="mt-6 max-w-3xl text-[clamp(1.05rem,1.55vw,1.36rem)] font-medium leading-8 text-slate-700">
+          <p className="mt-8 max-w-3xl text-[clamp(1.02rem,1.35vw,1.24rem)] font-normal leading-8 text-slate-700">
             Deccan Sites designs clean, responsive websites and web experiences for businesses that want a polished online presence without agency-level pricing.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -224,13 +224,16 @@ function Services() {
   return (
     <section id="services" className="px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
       <div className="mx-auto max-w-7xl">
-        <SectionHead eyebrow="What we create" title="Websites designed to sell trust before anything else." />
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {services.map(([title, desc]) => (
-            <article key={title} className="panel rounded-3xl p-6">
-              <span className="inline-block h-2 w-12 rounded-full bg-[#d7b56d]" />
-              <h3 className="mt-7 text-2xl font-black tracking-[-.03em] text-[#18202d]">{title}</h3>
-              <p className="mt-3 leading-7 text-slate-600">{desc}</p>
+        <SectionHead eyebrow="Digital toolkit" title="Websites designed to sell trust before anything else." />
+        <div className="bento-grid">
+          {services.map(([title, desc], index) => (
+            <article key={title} className={`panel bento-card bento-card-${index} rounded-3xl p-6`}>
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-xs font-black uppercase tracking-[.18em] text-[#8a641d]">0{index + 1}</span>
+                <span className="h-px flex-1 bg-[#E5E5E5]" />
+              </div>
+              <h3 className="mt-10 max-w-sm text-[clamp(1.75rem,3vw,3.05rem)] font-black leading-[.94] tracking-[-.02em] text-[#18202d]">{title}</h3>
+              <p className="mt-5 max-w-xl text-sm font-normal leading-7 text-slate-600">{desc}</p>
             </article>
           ))}
         </div>
@@ -355,6 +358,8 @@ function ProjectPortal() {
     return type + pagePrice + domain + addOns;
   }, [form.websiteType, form.pages, form.domainOption, form.addOns]);
 
+  const currentStage = project ? "Reserve" : form.idea ? "Review" : "Scope";
+
   function loadCashfreeCheckout() {
     if (window.Cashfree) {
       return Promise.resolve();
@@ -476,6 +481,14 @@ function ProjectPortal() {
 
         <div className="grid gap-6 lg:grid-cols-[1.15fr_.85fr] lg:items-start">
           <form id="project-portal-form" className="rounded-[1.75rem] border border-stone-200 bg-white p-5 shadow-[0_24px_90px_rgba(43,35,20,.12)] sm:p-7" onSubmit={submitProject}>
+            <div className="cinematic-steps mb-6">
+              {["Scope", "Review", "Reserve"].map((stage, index) => (
+                <span key={stage} className={stage === currentStage ? "is-active" : ""}>
+                  <b>{String(index + 1).padStart(2, "0")}</b>
+                  {stage}
+                </span>
+              ))}
+            </div>
             <div className="grid gap-5">
               <div className="grid gap-4 sm:grid-cols-3">
                 <LightInput label="Full name" value={form.name} onChange={(value) => updateField("name", value)} required />
