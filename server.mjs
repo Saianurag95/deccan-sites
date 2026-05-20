@@ -34,10 +34,13 @@ const sessionTtlMs = 30 * 24 * 60 * 60 * 1000;
 const otpSecret = process.env.OTP_SECRET || "deccan-sites-local-dev-secret";
 const resendApiKey = process.env.RESEND_API_KEY || "";
 const otpFromEmail = process.env.OTP_FROM_EMAIL || "Deccan Sites <onboarding@resend.dev>";
-const cashfreeAppId = process.env.CASHFREE_APP_ID || "";
-const cashfreeSecretKey = process.env.CASHFREE_SECRET_KEY || "";
-const cashfreeEnv = process.env.CASHFREE_ENV === "production" ? "production" : "sandbox";
-const cashfreeApiVersion = process.env.CASHFREE_API_VERSION || "2025-01-01";
+function envValue(...names) {
+  return names.map((name) => String(process.env[name] || "").trim()).find(Boolean) || "";
+}
+const cashfreeAppId = envValue("CASHFREE_APP_ID", "CASHFREE_CLIENT_ID");
+const cashfreeSecretKey = envValue("CASHFREE_SECRET_KEY", "CASHFREE_CLIENT_SECRET");
+const cashfreeEnv = envValue("CASHFREE_ENV").toLowerCase() === "production" ? "production" : "sandbox";
+const cashfreeApiVersion = envValue("CASHFREE_API_VERSION") || "2025-01-01";
 const supabaseUrl = process.env.SUPABASE_URL || "";
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 const isProduction = process.env.NODE_ENV === "production";
@@ -544,7 +547,11 @@ async function createCashfreeOrder({ amount, projectId, name, email, phone, orig
 
   const body = await orderResponse.json().catch(() => ({}));
   if (!orderResponse.ok) {
-    throw new Error(body.message || body.error?.message || "Could not create Cashfree payment order.");
+    const message = body.message || body.error?.message || "Could not create Cashfree payment order.";
+    if (/auth/i.test(message)) {
+      throw new Error(`Cashfree rejected the Payment Gateway credentials for ${cashfreeEnv} mode. Use matching Payment Gateway keys.`);
+    }
+    throw new Error(message);
   }
 
   return body;
@@ -563,7 +570,11 @@ async function fetchCashfreeOrder(orderId) {
 
   const body = await orderResponse.json().catch(() => ({}));
   if (!orderResponse.ok) {
-    throw new Error(body.message || body.error?.message || "Could not confirm Cashfree payment status.");
+    const message = body.message || body.error?.message || "Could not confirm Cashfree payment status.";
+    if (/auth/i.test(message)) {
+      throw new Error(`Cashfree rejected the Payment Gateway credentials for ${cashfreeEnv} mode. Use matching Payment Gateway keys.`);
+    }
+    throw new Error(message);
   }
 
   return body;

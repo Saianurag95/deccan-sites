@@ -1,7 +1,15 @@
 import { clampPaymentAmount, isValidEmail, json, normalizeEmail, normalizeProjectId, readJson } from "../_shared.js";
 
+function cashfreeValue(...names) {
+  return names.map((name) => String(process.env[name] || "").trim()).find(Boolean) || "";
+}
+
+function getCashfreeMode() {
+  return cashfreeValue("CASHFREE_ENV").toLowerCase() === "production" ? "production" : "sandbox";
+}
+
 function getCashfreeBaseUrl() {
-  return process.env.CASHFREE_ENV === "production" ? "https://api.cashfree.com/pg" : "https://sandbox.cashfree.com/pg";
+  return getCashfreeMode() === "production" ? "https://api.cashfree.com/pg" : "https://sandbox.cashfree.com/pg";
 }
 
 function createCashfreeOrderId(projectId) {
@@ -11,13 +19,16 @@ function createCashfreeOrderId(projectId) {
 
 async function createCashfreeOrder({ amount, projectId, name, email, phone, origin }) {
   const orderId = createCashfreeOrderId(projectId);
+  const mode = getCashfreeMode();
+  const appId = cashfreeValue("CASHFREE_APP_ID", "CASHFREE_CLIENT_ID");
+  const secretKey = cashfreeValue("CASHFREE_SECRET_KEY", "CASHFREE_CLIENT_SECRET");
   const orderResponse = await fetch(`${getCashfreeBaseUrl()}/orders`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-api-version": process.env.CASHFREE_API_VERSION || "2025-01-01",
-      "x-client-id": process.env.CASHFREE_APP_ID,
-      "x-client-secret": process.env.CASHFREE_SECRET_KEY,
+      "x-api-version": cashfreeValue("CASHFREE_API_VERSION") || "2025-01-01",
+      "x-client-id": appId,
+      "x-client-secret": secretKey,
       "x-idempotency-key": orderId,
       "User-Agent": "DeccanSites/1.0",
     },
@@ -44,6 +55,10 @@ async function createCashfreeOrder({ amount, projectId, name, email, phone, orig
 
   const body = await orderResponse.json().catch(() => ({}));
   if (!orderResponse.ok) {
+    const message = body.message || body.error?.message || "Could not create Cashfree payment order.";
+    if (/auth/i.test(message)) {
+      throw new Error(`Cashfree rejected the Payment Gateway credentials for ${mode} mode. Use ${mode} Payment Gateway Client ID/App ID and Secret Key, not Payouts or the other environment.`);
+    }
     throw new Error(body.message || body.error?.message || "Could not create Cashfree payment order.");
   }
 
@@ -79,7 +94,9 @@ export default async function handler(request, response) {
       return;
     }
 
-    if (!process.env.CASHFREE_APP_ID || !process.env.CASHFREE_SECRET_KEY) {
+    const appId = cashfreeValue("CASHFREE_APP_ID", "CASHFREE_CLIENT_ID");
+    const secretKey = cashfreeValue("CASHFREE_SECRET_KEY", "CASHFREE_CLIENT_SECRET");
+    if (!appId || !secretKey) {
       json(response, 503, {
         ok: false,
         error: "Payment gateway is not configured yet. Add Cashfree keys to the server environment.",
@@ -98,7 +115,7 @@ export default async function handler(request, response) {
       paymentSessionId: order.payment_session_id,
       amount: order.order_amount,
       currency: order.order_currency,
-      mode: process.env.CASHFREE_ENV === "production" ? "production" : "sandbox",
+      mode: getCashfreeMode(),
       name: "Deccan Sites",
       description: `Website project payment - ${projectId}`,
     });

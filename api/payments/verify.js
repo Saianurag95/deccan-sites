@@ -1,23 +1,35 @@
 import { json, normalizeProjectId, readJson, updateSupabasePayment } from "../_shared.js";
 
+function cashfreeValue(...names) {
+  return names.map((name) => String(process.env[name] || "").trim()).find(Boolean) || "";
+}
+
+function getCashfreeMode() {
+  return cashfreeValue("CASHFREE_ENV").toLowerCase() === "production" ? "production" : "sandbox";
+}
+
 function getCashfreeBaseUrl() {
-  return process.env.CASHFREE_ENV === "production" ? "https://api.cashfree.com/pg" : "https://sandbox.cashfree.com/pg";
+  return getCashfreeMode() === "production" ? "https://api.cashfree.com/pg" : "https://sandbox.cashfree.com/pg";
 }
 
 async function fetchCashfreeOrder(orderId) {
   const orderResponse = await fetch(`${getCashfreeBaseUrl()}/orders/${encodeURIComponent(orderId)}`, {
     method: "GET",
     headers: {
-      "x-api-version": process.env.CASHFREE_API_VERSION || "2025-01-01",
-      "x-client-id": process.env.CASHFREE_APP_ID,
-      "x-client-secret": process.env.CASHFREE_SECRET_KEY,
+      "x-api-version": cashfreeValue("CASHFREE_API_VERSION") || "2025-01-01",
+      "x-client-id": cashfreeValue("CASHFREE_APP_ID", "CASHFREE_CLIENT_ID"),
+      "x-client-secret": cashfreeValue("CASHFREE_SECRET_KEY", "CASHFREE_CLIENT_SECRET"),
       "User-Agent": "DeccanSites/1.0",
     },
   });
 
   const body = await orderResponse.json().catch(() => ({}));
   if (!orderResponse.ok) {
-    throw new Error(body.message || body.error?.message || "Could not confirm Cashfree payment status.");
+    const message = body.message || body.error?.message || "Could not confirm Cashfree payment status.";
+    if (/auth/i.test(message)) {
+      throw new Error(`Cashfree rejected the Payment Gateway credentials for ${getCashfreeMode()} mode. Use matching Payment Gateway keys in Vercel.`);
+    }
+    throw new Error(message);
   }
 
   return body;
@@ -30,7 +42,7 @@ export default async function handler(request, response) {
   }
 
   try {
-    if (!process.env.CASHFREE_APP_ID || !process.env.CASHFREE_SECRET_KEY) {
+    if (!cashfreeValue("CASHFREE_APP_ID", "CASHFREE_CLIENT_ID") || !cashfreeValue("CASHFREE_SECRET_KEY", "CASHFREE_CLIENT_SECRET")) {
       json(response, 503, { ok: false, error: "Payment verification is not configured yet." });
       return;
     }
