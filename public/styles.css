@@ -157,121 +157,12 @@ textarea {
 }
 
 main > section:not(#top) {
-  padding-top: 128px !important;
-  padding-bottom: 128px !important;
+  padding-top: 120px !important;
+  padding-bottom: 120px !important;
 }
 
 .pricing-card {
   padding: 24px !important;
-}
-
-.toolkit-grid {
-  display: grid;
-  gap: 28px;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-}
-
-.toolkit-card {
-  min-height: 280px;
-  grid-column: span 4;
-}
-
-.toolkit-card-0,
-.toolkit-card-5 {
-  grid-column: span 6;
-}
-
-.toolkit-card-2 {
-  grid-column: span 5;
-}
-
-.toolkit-card-3 {
-  grid-column: span 7;
-}
-
-.pricing-layout {
-  display: grid;
-  gap: 28px;
-  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.16fr) minmax(0, 0.92fr);
-  align-items: stretch;
-}
-
-.pricing-featured {
-  transform: translateY(-18px);
-}
-
-.brief-rail {
-  display: grid;
-  gap: 1px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  border: 1px solid var(--line);
-  background: var(--line);
-}
-
-.brief-rail span {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  background: rgba(251, 251, 250, 0.86);
-  padding: 14px;
-  color: rgba(16, 20, 21, 0.62);
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.brief-rail strong {
-  color: var(--gold) !important;
-  font-size: 0.78rem;
-}
-
-.estimate-engine {
-  border: 1px solid var(--line);
-  background:
-    linear-gradient(135deg, rgba(251, 251, 250, 0.84), rgba(251, 251, 250, 0.62)),
-    rgba(251, 251, 250, 0.78);
-  padding: 16px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-.estimate-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  border-top: 1px solid var(--line);
-  padding: 12px 0 0;
-}
-
-.estimate-row:first-child {
-  border-top: 0;
-}
-
-.estimate-row span {
-  display: block;
-  color: rgba(16, 20, 21, 0.46);
-  font-size: 0.68rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.estimate-row strong {
-  display: block;
-  margin-top: 3px;
-  max-width: 190px;
-  color: var(--text) !important;
-  font-size: 0.88rem;
-  line-height: 1.35;
-}
-
-.estimate-row b {
-  color: var(--text);
-  font-size: 0.95rem;
-  white-space: nowrap;
 }
 
 #project-portal-form,
@@ -389,27 +280,5 @@ li {
   main > section:not(#top) {
     padding-top: 88px !important;
     padding-bottom: 88px !important;
-  }
-
-  .toolkit-grid,
-  .pricing-layout {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  .toolkit-card,
-  .toolkit-card-0,
-  .toolkit-card-2,
-  .toolkit-card-3,
-  .toolkit-card-5 {
-    grid-column: auto;
-  }
-
-  .pricing-featured {
-    transform: none;
-  }
-
-  .brief-rail {
-    grid-template-columns: 1fr;
   }
 }
