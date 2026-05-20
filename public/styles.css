@@ -138,12 +138,21 @@ textarea {
   flex-direction: column;
 }
 
+#work .demo-card > h3 {
+  min-height: 132px;
+}
+
+#work .demo-card > p {
+  min-height: 72px;
+}
+
 #work .demo-card > div {
-  flex: 1;
+  min-height: 128px;
 }
 
 #work .demo-card > span:last-child {
   margin-top: auto;
+  align-self: flex-start;
 }
 
 .demo-card {
