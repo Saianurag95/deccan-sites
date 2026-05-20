@@ -127,6 +127,25 @@ textarea {
   -webkit-backdrop-filter: blur(16px);
 }
 
+#work .grid {
+  align-items: stretch;
+}
+
+#work .demo-card {
+  display: flex !important;
+  min-height: 430px;
+  height: 100%;
+  flex-direction: column;
+}
+
+#work .demo-card > div {
+  flex: 1;
+}
+
+#work .demo-card > span:last-child {
+  margin-top: auto;
+}
+
 .demo-card {
   background:
     radial-gradient(circle at 20% 0%, color-mix(in srgb, var(--glow) 14%, transparent), transparent 38%),
