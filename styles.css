@@ -183,19 +183,6 @@ main > section:not(#top) {
   border-color: rgba(197, 160, 89, 0.42);
 }
 
-.bento-card-0,
-.bento-card-5 {
-  grid-column: span 6;
-}
-
-.bento-card-2 {
-  grid-column: span 5;
-}
-
-.bento-card-3 {
-  grid-column: span 7;
-}
-
 .cinematic-steps {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -380,11 +367,7 @@ li {
     grid-template-columns: 1fr;
   }
 
-  .bento-card,
-  .bento-card-0,
-  .bento-card-2,
-  .bento-card-3,
-  .bento-card-5 {
+  .bento-card {
     grid-column: auto;
   }
 
