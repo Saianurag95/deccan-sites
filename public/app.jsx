@@ -232,8 +232,8 @@ function Services() {
                 <span className="text-xs font-black uppercase tracking-[.18em] text-[#8a641d]">0{index + 1}</span>
                 <span className="h-px flex-1 bg-[#E5E5E5]" />
               </div>
-              <h3 className="mt-10 max-w-sm text-[clamp(1.75rem,3vw,3.05rem)] font-black leading-[.94] tracking-[-.02em] text-[#18202d]">{title}</h3>
-              <p className="mt-5 max-w-xl text-sm font-normal leading-7 text-slate-600">{desc}</p>
+              <h3 className="mt-6 max-w-sm text-[clamp(1.45rem,2.25vw,2.25rem)] font-black leading-[1] tracking-[-.02em] text-[#18202d]">{title}</h3>
+              <p className="mt-4 max-w-xl text-sm font-normal leading-6 text-slate-600">{desc}</p>
             </article>
           ))}
         </div>
