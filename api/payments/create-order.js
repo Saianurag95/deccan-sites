@@ -43,7 +43,7 @@ async function createCashfreeOrder({ amount, projectId, name, email, phone, orig
         customer_phone: phone,
       },
       order_meta: {
-        return_url: `${origin || "https://deccan-sites.vercel.app"}/?cashfree_order_id={order_id}`,
+        return_url: `${origin || "https://deccan-sites.vercel.app"}/confirmation.html?projectId=${encodeURIComponent(projectId)}&orderId={order_id}`,
       },
       order_note: `Website project payment - ${projectId}`,
       order_tags: {

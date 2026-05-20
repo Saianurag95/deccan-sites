@@ -3,16 +3,41 @@ import {
   createProjectId,
   domainOptions,
   estimateAddOns,
+  fetchSupabaseProject,
   insertSupabaseProject,
   isValidEmail,
   json,
   normalizeEmail,
+  normalizeProjectId,
   notifyAdminProjectCreated,
   readJson,
   websiteTypes,
 } from "./_shared.js";
 
 export default async function handler(request, response) {
+  if (request.method === "GET") {
+    try {
+      const url = new URL(request.url, `https://${request.headers.host || "deccan-sites.vercel.app"}`);
+      const projectId = normalizeProjectId(url.searchParams.get("projectId"));
+
+      if (!projectId.startsWith("DS-")) {
+        json(response, 400, { ok: false, error: "Enter a valid project ID." });
+        return;
+      }
+
+      const project = await fetchSupabaseProject(projectId);
+      if (!project) {
+        json(response, 404, { ok: false, error: "Project was not found." });
+        return;
+      }
+
+      json(response, 200, { ok: true, project });
+    } catch (error) {
+      json(response, 500, { ok: false, error: error.message || "Could not fetch project details." });
+    }
+    return;
+  }
+
   if (request.method !== "POST") {
     json(response, 405, { ok: false, error: "Method not allowed." });
     return;

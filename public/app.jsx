@@ -124,6 +124,7 @@ function Header() {
         {[
           ["Services", "#services"],
           ["Pricing", "#pricing"],
+          ["After payment", "#after-payment"],
           ["Portal", "#portal"],
           ["Work", "#work"],
           ["Contact", "#contact"],
@@ -269,6 +270,38 @@ function Pricing() {
               </ul>
             </article>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const paymentFlow = [
+  ["01", "Payment confirmation", "The payment is verified through Cashfree and linked to the same project brief."],
+  ["02", "Confirmation page", "The customer sees their project details, payment ID, estimate, and contact information on one clean page."],
+  ["03", "Team review", "Deccan Sites reviews the requirement, content readiness, launch date, and selected features."],
+  ["04", "Build kickoff", "The project moves into design and development with the saved brief as the single source of truth."],
+];
+
+function AfterPayment() {
+  return (
+    <section id="after-payment" className="px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-8 lg:grid-cols-[.78fr_1.22fr] lg:items-start">
+          <SectionHead eyebrow="After payment" title="A clear confirmation page, then your build starts." >
+            <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
+              After checkout, the customer is sent to a dedicated confirmation page showing the payment ID, project ID, estimate, and submitted business details.
+            </p>
+          </SectionHead>
+          <div className="after-payment-grid">
+            {paymentFlow.map(([step, title, desc]) => (
+              <article key={title} className="after-payment-card">
+                <span>{step}</span>
+                <h3>{title}</h3>
+                <p>{desc}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -449,7 +482,20 @@ function ProjectPortal() {
       if (!verified.ok) {
         throw new Error(verified.error || "Payment is not confirmed yet.");
       }
-      setStatus("Payment verified through Cashfree. Your project booking is recorded.");
+      const confirmation = {
+        project: activeProject,
+        orderId: verified.orderId || order.orderId,
+        paymentId: verified.paymentId,
+        status: verified.status || "PAID",
+      };
+      localStorage.setItem("deccan_sites_last_confirmation", JSON.stringify(confirmation));
+      const params = new URLSearchParams({
+        projectId: activeProject?.projectId || "",
+        orderId: confirmation.orderId || "",
+        paymentId: confirmation.paymentId || "",
+        status: confirmation.status || "PAID",
+      });
+      window.location.href = `confirmation.html?${params.toString()}`;
     } catch (error) {
       setStatus(error.message || "Payment could not be started.");
     } finally {
@@ -718,6 +764,7 @@ function App() {
         <Hero />
         <Services />
         <Pricing />
+        <AfterPayment />
         <ProjectPortal />
         <Showcase />
         <Quality />

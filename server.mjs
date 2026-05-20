@@ -173,6 +173,32 @@ function toSupabaseProject(project) {
   };
 }
 
+function fromSupabaseProject(row) {
+  return {
+    projectId: row.project_id,
+    name: row.name,
+    email: row.email,
+    phone: row.phone,
+    businessName: row.business_name,
+    businessLocation: row.business_location,
+    businessCategory: row.business_category,
+    websiteType: row.website_type,
+    pages: row.pages,
+    domainOption: row.domain_option,
+    addOns: row.add_ons || [],
+    sections: row.sections || [],
+    idea: row.idea,
+    references: row.reference,
+    contentReadiness: row.content_readiness,
+    logoReadiness: row.logo_readiness,
+    launchDate: row.launch_date,
+    notes: row.notes,
+    estimatedAmount: row.estimated_amount,
+    paymentStatus: row.payment_status,
+    paymentId: row.payment_id,
+  };
+}
+
 async function insertSupabaseProject(project) {
   if (!supabaseUrl || !supabaseServiceRoleKey) {
     throw new Error("Supabase is not configured. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.");
@@ -195,6 +221,29 @@ async function insertSupabaseProject(project) {
   }
 
   return text ? JSON.parse(text) : [];
+}
+
+async function fetchSupabaseProject(projectId) {
+  if (!supabaseUrl || !supabaseServiceRoleKey) {
+    throw new Error("Supabase is not configured. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.");
+  }
+
+  const response = await fetch(`${supabaseUrl}/rest/v1/projects?project_id=eq.${encodeURIComponent(projectId)}&select=*`, {
+    method: "GET",
+    headers: {
+      apikey: supabaseServiceRoleKey,
+      Authorization: `Bearer ${supabaseServiceRoleKey}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(`Supabase project fetch failed: ${text || response.status}`);
+  }
+
+  const rows = text ? JSON.parse(text) : [];
+  return rows[0] ? fromSupabaseProject(rows[0]) : null;
 }
 
 async function updateSupabasePayment(projectId, paymentId) {
@@ -631,6 +680,35 @@ async function handleCreateProject(request, response) {
   }
 }
 
+async function handleGetProject(request, response) {
+  try {
+    const url = new URL(request.url, `http://${request.headers.host || "127.0.0.1"}`);
+    const projectId = normalizeProjectId(url.searchParams.get("projectId"));
+
+    if (!projectId.startsWith("DS-")) {
+      json(response, 400, { ok: false, error: "Enter a valid project ID." });
+      return;
+    }
+
+    const store = normalizeStore(await readStore());
+    const localProject = store.projects.find((item) => item.projectId === projectId);
+    if (localProject) {
+      json(response, 200, { ok: true, project: localProject });
+      return;
+    }
+
+    const project = await fetchSupabaseProject(projectId);
+    if (!project) {
+      json(response, 404, { ok: false, error: "Project was not found." });
+      return;
+    }
+
+    json(response, 200, { ok: true, project });
+  } catch (error) {
+    json(response, 500, { ok: false, error: error.message || "Could not fetch project details." });
+  }
+}
+
 function getCashfreeBaseUrl() {
   return cashfreeEnv === "production" ? "https://api.cashfree.com/pg" : "https://sandbox.cashfree.com/pg";
 }
@@ -663,7 +741,7 @@ async function createCashfreeOrder({ amount, projectId, name, email, phone, orig
         customer_phone: phone,
       },
       order_meta: {
-        return_url: `${origin || "http://127.0.0.1:8030"}/?cashfree_order_id={order_id}`,
+        return_url: `${origin || "http://127.0.0.1:8030"}/confirmation.html?projectId=${encodeURIComponent(projectId)}&orderId={order_id}`,
       },
       order_note: `Website project payment - ${projectId}`,
       order_tags: {
@@ -855,6 +933,11 @@ async function handleVerifyPayment(request, response) {
 }
 
 async function handleApi(request, response, pathname) {
+  if (request.method === "GET" && pathname === "/api/projects") {
+    await handleGetProject(request, response);
+    return true;
+  }
+
   if (request.method === "POST" && pathname === "/api/projects") {
     await handleCreateProject(request, response);
     return true;

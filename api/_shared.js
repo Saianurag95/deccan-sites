@@ -239,6 +239,32 @@ export function toSupabaseProject(project) {
   };
 }
 
+export function fromSupabaseProject(row) {
+  return {
+    projectId: row.project_id,
+    name: row.name,
+    email: row.email,
+    phone: row.phone,
+    businessName: row.business_name,
+    businessLocation: row.business_location,
+    businessCategory: row.business_category,
+    websiteType: row.website_type,
+    pages: row.pages,
+    domainOption: row.domain_option,
+    addOns: row.add_ons || [],
+    sections: row.sections || [],
+    idea: row.idea,
+    references: row.reference,
+    contentReadiness: row.content_readiness,
+    logoReadiness: row.logo_readiness,
+    launchDate: row.launch_date,
+    notes: row.notes,
+    estimatedAmount: row.estimated_amount,
+    paymentStatus: row.payment_status,
+    paymentId: row.payment_id,
+  };
+}
+
 export async function insertSupabaseProject(project) {
   const supabaseUrl = process.env.SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -264,6 +290,35 @@ export async function insertSupabaseProject(project) {
   }
 
   return text ? JSON.parse(text) : [];
+}
+
+export async function fetchSupabaseProject(projectId) {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error("Supabase is not configured. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.");
+  }
+
+  const response = await fetch(
+    `${supabaseUrl}/rest/v1/projects?project_id=eq.${encodeURIComponent(projectId)}&select=*`,
+    {
+      method: "GET",
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(`Supabase project fetch failed: ${text || response.status}`);
+  }
+
+  const rows = text ? JSON.parse(text) : [];
+  return rows[0] ? fromSupabaseProject(rows[0]) : null;
 }
 
 export async function updateSupabasePayment(projectId, paymentId) {
