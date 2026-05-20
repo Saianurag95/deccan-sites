@@ -177,6 +177,11 @@ main > section:not(#top) {
   transition: transform 180ms ease, opacity 180ms ease, border-color 180ms ease;
 }
 
+.bento-card-1,
+.bento-card-5 {
+  grid-column: span 6;
+}
+
 .bento-card:hover {
   opacity: 0.92;
   transform: scale(0.99);
