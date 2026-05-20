@@ -205,26 +205,26 @@ async function updateSupabasePayment(projectId, paymentId) {
 }
 
 const websiteTypes = [
-  { label: "Concept landing system", price: 999 },
-  { label: "Development portfolio", price: 2499 },
-  { label: "Investor presentation portal", price: 4999 },
-  { label: "Full development platform", price: 7999 },
+  { label: "Landing page", price: 999 },
+  { label: "Business website", price: 2499 },
+  { label: "E-commerce catalog", price: 4999 },
+  { label: "Custom web app", price: 7999 },
 ];
 
 const estimateAddOns = [
-  { label: "Additional development page", price: 350 },
-  { label: "Brand refinement", price: 599 },
-  { label: "Editorial copywriting", price: 799 },
-  { label: "Lead enquiry flow", price: 1299 },
-  { label: "Payment-ready booking setup", price: 1999 },
-  { label: "Operator dashboard", price: 3999 },
+  { label: "Extra page", price: 350 },
+  { label: "Logo refresh", price: 599 },
+  { label: "Content writing", price: 799 },
+  { label: "Booking / enquiry flow", price: 1299 },
+  { label: "Payment-ready setup", price: 1999 },
+  { label: "Admin dashboard", price: 3999 },
 ];
 
 const domainOptions = [
-  { label: "Existing domain", price: 0 },
-  { label: "Domain architecture support", price: 599 },
+  { label: "Already have domain", price: 0 },
+  { label: "Domain setup support", price: 599 },
   { label: "Hosting launch support", price: 999 },
-  { label: "Domain + hosting orchestration", price: 1499 },
+  { label: "Domain + hosting support", price: 1499 },
 ];
 
 function getOptionPrice(options, selectedLabel) {
