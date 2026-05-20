@@ -66,7 +66,7 @@ const services = [
   ["Web Applications", "Dashboards, booking flows, lead systems, and custom business tools."],
   ["Domain & Hosting", "Guidance for domain connection, hosting setup, SSL, and basic launch support."],
   ["Brand Presence", "Layout, content structure, CTAs, colors, and polished user experience."],
-  ["Maintenance", "Small edits, page additions, launch fixes, and website care plans."],
+  ["AI Strategy", "AI-ready content flows, smart lead capture, automation planning, and sharper digital growth direction."],
 ];
 
 const highlights = [
@@ -144,7 +144,7 @@ function Hero() {
   return (
     <section id="top" className="relative isolate overflow-hidden px-4 pb-20 pt-56 sm:px-6 sm:pt-44 lg:min-h-[94svh] lg:px-8 lg:pt-40">
       <div className="absolute inset-0 -z-30 hero-bg" />
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_18%_16%,rgba(201,154,61,.22),transparent_30%),radial-gradient(circle_at_84%_14%,rgba(90,143,130,.18),transparent_28%),linear-gradient(180deg,rgba(255,250,240,.88),#f4efe5_86%)]" />
+      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_18%_16%,rgba(139,92,246,.28),transparent_30%),radial-gradient(circle_at_84%_14%,rgba(217,70,239,.2),transparent_28%),linear-gradient(180deg,rgba(7,10,26,.82),#0b1028_86%)]" />
       <div className="lux-grid" />
 
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[minmax(0,1fr)_440px] lg:items-center">
@@ -162,9 +162,6 @@ function Hero() {
           <div className="mt-8 flex flex-wrap gap-3">
             <a className="shine-btn rounded-2xl bg-[#18202d] px-5 py-4 text-sm font-black text-white" href="#portal">
               Start project portal
-            </a>
-            <a className="rounded-2xl border border-slate-900/12 bg-white/72 px-5 py-4 text-sm font-black text-[#18202d] backdrop-blur hover:bg-white" href="#pricing">
-              View pricing
             </a>
           </div>
           <p className="mt-5 max-w-xl rounded-2xl border border-[#c99a3d]/25 bg-white/72 px-4 py-3 text-sm font-extrabold text-[#8a641d]">
@@ -184,7 +181,7 @@ function Hero() {
             <span className="text-sm font-extrabold text-[#8a641d]">Featured package</span>
             <span className="rounded-full bg-slate-900/8 px-3 py-1 text-xs font-extrabold text-[#18202d]">Pilot pricing</span>
           </div>
-          <div className="rounded-3xl bg-[linear-gradient(135deg,#ffffff,#f3dfae)] p-6 text-[#18202d]">
+          <div className="rounded-3xl bg-[linear-gradient(135deg,rgba(255,255,255,.16),rgba(139,92,246,.22),rgba(217,70,239,.12))] p-6 text-[#18202d]">
             <p className="text-xs font-extrabold uppercase tracking-[.14em] text-[#8a641d]">Business site</p>
             <h2 className="mt-5 text-4xl font-black leading-none tracking-[-.04em]">₹2,999</h2>
             <p className="mt-4 leading-7 text-slate-700">A professional website for service businesses, shops, cafes, clinics, creators, and local brands.</p>
@@ -252,7 +249,7 @@ function Pricing() {
         </p>
         <div className="grid gap-4 lg:grid-cols-3">
           {packages.map((pack, index) => (
-            <article key={pack.name} className={`panel rounded-3xl p-6 ${index === 1 ? "border-[#c99a3d]/50 bg-[#fff8e8]" : ""}`}>
+            <article key={pack.name} className={`panel pricing-card rounded-3xl p-6 ${index === 1 ? "border-[#c99a3d]/50 bg-[#fff8e8]" : ""}`}>
               <div className="flex items-center justify-between gap-3">
                 <span className="chip">{pack.tag}</span>
                 <span className="rounded-full bg-slate-900/[.06] px-3 py-1 text-sm font-black text-slate-500 line-through">{pack.old}</span>
@@ -509,7 +506,7 @@ function ProjectPortal() {
               <LightTextarea label="Describe the website idea" value={form.idea} onChange={(value) => updateField("idea", value)} required />
               <LightTextarea label="Reference websites" value={form.references} onChange={(value) => updateField("references", value)} />
               <div className="grid gap-4 sm:grid-cols-2">
-                <LightInput label="Preferred launch date" value={form.launchDate} onChange={(value) => updateField("launchDate", value)} />
+                <LightInput label="Preferred launch date" type="date" value={form.launchDate} onChange={(value) => updateField("launchDate", value)} />
                 <LightInput label="Extra notes" value={form.notes} onChange={(value) => updateField("notes", value)} />
               </div>
 
