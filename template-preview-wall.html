@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agency Template Preview Wall</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #080808;
+        --panel: #111111;
+        --line: #2a2a2a;
+        --text: #f4f1ea;
+        --muted: #a19a8d;
+        --accent: #d8b45a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 18px 22px;
+        background: rgba(8, 8, 8, 0.88);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(18px);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 18px;
+        letter-spacing: 0.02em;
+      }
+
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      a {
+        color: var(--text);
+        text-decoration: none;
+      }
+
+      .links a {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 8px 11px;
+        font-size: 12px;
+        color: var(--muted);
+        transition: border-color 160ms ease, color 160ms ease;
+      }
+
+      .links a:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        padding: 16px;
+      }
+
+      .frame-card {
+        min-height: 72vh;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--panel);
+        box-shadow: 0 18px 80px rgba(0, 0, 0, 0.35);
+      }
+
+      .frame-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--line);
+        background: #0e0e0e;
+      }
+
+      .title {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .title strong {
+        font-size: 13px;
+      }
+
+      .title span {
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .open {
+        color: var(--accent);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      iframe {
+        width: 100%;
+        height: calc(72vh - 43px);
+        border: 0;
+        background: white;
+      }
+
+      .missing {
+        display: grid;
+        place-items: center;
+        min-height: 72vh;
+        padding: 36px;
+        text-align: center;
+        color: var(--muted);
+      }
+
+      .missing strong {
+        display: block;
+        color: var(--text);
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+
+      @media (min-width: 1500px) {
+        main {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 980px) {
+        header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        main {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Agency Template Preview Wall</h1>
+      <nav class="links" aria-label="Direct template links">
+        <a href="https://saianurag95.github.io/template-1-for-agency/" target="_blank">Template 1</a>
+        <a href="https://saianurag95.github.io/template-2-for-agency/" target="_blank">Template 2</a>
+        <a href="https://saianurag95.github.io/template-3-for-agency/" target="_blank">Template 3</a>
+        <a href="https://saianurag95.github.io/template-4-for-agency/" target="_blank">Template 4</a>
+        <a href="https://saianurag95.github.io/template-5-for-agency/" target="_blank">Template 5</a>
+        <a href="https://saianurag95.github.io/template-6-for-agency/" target="_blank">Template 6</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="frame-card">
+        <div class="frame-head">
+          <div class="title"><strong>Template 1</strong><span>White-label production agency</span></div>
+          <a class="open" href="https://saianurag95.github.io/template-1-for-agency/" target="_blank">Open full</a>
+        </div>
+        <iframe src="https://saianurag95.github.io/template-1-for-agency/" title="Template 1"></iframe>
+      </section>
+
+      <section class="frame-card">
+        <div class="frame-head">
+          <div class="title"><strong>Template 2</strong><span>Local growth agency</span></div>
+          <a class="open" href="https://saianurag95.github.io/template-2-for-agency/" target="_blank">Open full</a>
+        </div>
+        <iframe src="https://saianurag95.github.io/template-2-for-agency/" title="Template 2"></iframe>
+      </section>
+
+      <section class="frame-card">
+        <div class="frame-head">
+          <div class="title"><strong>Template 3</strong><span>Lead generation agency</span></div>
+          <a class="open" href="https://saianurag95.github.io/template-3-for-agency/" target="_blank">Open full</a>
+        </div>
+        <iframe src="https://saianurag95.github.io/template-3-for-agency/" title="Template 3"></iframe>
+      </section>
+
+      <section class="frame-card">
+        <div class="frame-head">
+          <div class="title"><strong>Template 4</strong><span>SEO performance agency</span></div>
+          <a class="open" href="https://saianurag95.github.io/template-4-for-agency/" target="_blank">Open full</a>
+        </div>
+        <iframe src="https://saianurag95.github.io/template-4-for-agency/" title="Template 4"></iframe>
+      </section>
+
+      <section class="frame-card">
+        <div class="frame-head">
+          <div class="title"><strong>Template 5</strong><span>Creative studio agency</span></div>
+          <a class="open" href="https://saianurag95.github.io/template-5-for-agency/" target="_blank">Open full</a>
+        </div>
+        <iframe src="https://saianurag95.github.io/template-5-for-agency/" title="Template 5"></iframe>
+      </section>
+
+      <section class="frame-card">
+        <div class="frame-head">
+          <div class="title"><strong>Template 6</strong><span>Social media agency</span></div>
+          <a class="open" href="https://saianurag95.github.io/template-6-for-agency/" target="_blank">Open full</a>
+        </div>
+        <iframe src="https://saianurag95.github.io/template-6-for-agency/" title="Template 6"></iframe>
+      </section>
+    </main>
+  </body>
+</html>
