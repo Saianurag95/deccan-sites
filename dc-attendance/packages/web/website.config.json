@@ -1,8 +1,0 @@
-{
-    "id": "website",
-    "name": "DC Attendance Portal",
-    "description": "Attendance and evaluation portal built with React, Hono, Drizzle, and Supabase",
-    "url": "https://example.com",
-    "hostname": "localhost",
-    "port": 4200
-}
